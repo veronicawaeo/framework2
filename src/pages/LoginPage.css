@@ -1,0 +1,65 @@
+.bg-purple {
+    background-color: #9c6ade; /* warna ungu unsrat */
+  }
+  
+.cursor-pointer {
+    cursor: pointer;
+  }
+
+.no-body-padding { /* Menghilangkan padding body karena setting body di home.css ada padding-topnya*/
+    padding-top: 0 !important;
+  }
+
+.btn-purple {
+    background-color: #6f42c1; /* atau hex warna ungu kamu */
+    color: #fff;
+    border: none;
+  }
+  
+.btn-purple:hover {
+    background-color: #5a3a95; /* warna saat hover */
+    color: #c9affa;    
+  }
+
+  .user-tab {
+    transition: color 0.3s ease;
+    color: #311566; /* warna gelap untuk active (default) */
+  }
+  
+  .user-tab-inactive {
+    color: #868686; /* warna terang untuk yang tidak dipilih */
+  }
+  
+  .user-tab:hover {
+    color: #563692; /* bisa dikasih hover efek juga */
+    cursor: pointer;
+  }
+
+  .user-tab {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+    opacity: 1;
+  }
+  
+  .user-tab-inactive {
+    color: #b0b0b0;
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  
+  .user-type-fields {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 500px; /* batas maksimal yang cukup besar */
+    opacity: 1;
+  }
+  
+  .user-type-fields.fade {
+    opacity: 0.3;
+  }  
+  
+  /* Tambahkan ini juga kalau kamu pakai class custom untuk tombol */
+  
+  .fade {
+    opacity: 0.3;
+  }

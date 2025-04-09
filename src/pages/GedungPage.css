@@ -1,0 +1,27 @@
+/* src/pages/GedungPage.css */
+.progress {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .btn-ungu {
+    background-color: #6f42c1;
+    color: white;
+    margin-bottom: 5rem;
+  }
+
+  .btn-ungu:hover {
+    background-color: #412680;
+    color: rgb(228, 228, 228);
+  }
+  
+  .btn-ungu:disabled {
+    background-color: #d3bff0;
+    cursor: not-allowed;
+  }
+  

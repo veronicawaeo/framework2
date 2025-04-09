@@ -1,0 +1,73 @@
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    padding: 0.75rem;
+    border-radius: 1rem;
+  }
+  
+a:hover span:last-child {
+    transform: translateX(2px);
+    transition: transform 0.2s;
+}  
+  
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    background-color: #eadeff;
+  }
+  
+  .card-body {
+    padding: 1.2rem;
+    overflow: auto;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .card-text {
+    font-size: 0.9rem;
+  }
+  
+  .card-category {
+    color: #6F42C1; /* Ungu (atau ganti sesuai warna yang kamu mau) */
+  }
+
+  .card-link {
+    color: #6F42C1;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .card-link:hover {
+    color: #4e1876; /* warna lebih gelap saat hover */
+  }
+  
+  .card-link span:last-child {
+    transition: transform 0.2s;
+  }
+  
+  .card-link:hover span:last-child {
+    transform: translateX(2px);
+  }
+  
+  .arrow-circle {
+    background-color: #ac96d2; /* warna latar */
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .card-link:hover .arrow-circle {
+    background-color: #603183;
+    transform: translateX(2px);
+  }
+  
+  
