@@ -10,6 +10,8 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import GedungPage from './pages/GedungPage';
 import KonfirmasiPage from './pages/KonfirmasiPage';
+import AdmPage from './pages/AdmPage'; 
+import About from './pages/About';
 
 const AppContent = () => {
   const location = useLocation();
@@ -26,6 +28,8 @@ const AppContent = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/:gedungId" element={<GedungPage />} />
+        <Route path="/admin" element={<AdmPage />} />
+        <Route path="/about" element={<About />} />
         <Route
           path="/konfirmasi"
           element={

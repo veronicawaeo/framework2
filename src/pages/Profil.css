@@ -4,7 +4,7 @@
     align-items: center;
     padding: 60px 20px;
     background: linear-gradient(to bottom right, #f7f0ff, #e2d2f7);
-    min-height: 77vh;
+    min-height: 83vh;
   }
   
   .profil-card {
@@ -12,7 +12,7 @@
     border-radius: 24px;
     width: 100%;
     max-width: 800px; /* diperbesar dari 500px */
-    padding: 40px 35px; /* diperbesar */
+    padding: 35px 30px; /* diperbesar */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
   

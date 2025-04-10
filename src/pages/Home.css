@@ -5,6 +5,7 @@ body {
 
 .container.mt-4 {
   margin-top: 0 !important;
+  padding-left: 0;
 }
 
 .hero-section {
@@ -13,11 +14,11 @@ body {
   color: white;
   z-index: 1;
   width: calc(100% + 40px); /* Lebarkan sedikit dari container */
-  margin: 20px -20px 0 -20px; /* Atas 20px, kiri dan kanan -20px agar tetap ada jarak */
+  margin: 20px -20px 0 -20px;
   border-radius: 20px;
-  overflow: visible; /* agar container di atas tidak terpotong */
+  overflow: visible; /* supaya container di atas tidak terpotong */
   padding-bottom: 60px;
-  height: 520px; /* Tambahkan ini agar hero lebih tinggi */
+  height: 520px; 
 }
 
 .hero-section img {
@@ -31,7 +32,7 @@ body {
   right: 0;
   bottom: 0;
   z-index: -1; /* Biar gambar tetap di belakang */
-  border-radius: inherit; /* <- tambahkan ini */
+  border-radius: inherit;
 }
 
 .hero-text {
@@ -218,18 +219,26 @@ label {
     width: 95%;
     margin-top: -40px;
   }
+
+  .hero-text h1 {
+    font-size: 24px;
+  }
+
+  .hero-text p {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 768px) {
   .custom-container {
     width: 90%;
     max-width: 100%;
-    margin-top: -60px; /* Naikkan lebih sedikit agar tidak terlalu tumpang tindih */
+    margin-top: -60px; 
     padding: 0 10px;
   }
 
   .hero-section {
-    height: 400px; /* Turunkan tinggi agar proporsional */
+    height: 400px;
     margin: 10px -10px 0 -10px;
   }
 
@@ -246,9 +255,9 @@ label {
   }
 
   .btn-custom {
-    margin: 20px 0;
-    padding: 10px 20px;
     font-size: 14px;
+    padding: 10px 16px;
+    margin: 20px auto;
   }
 
   .blur-container {
@@ -268,12 +277,31 @@ label {
     margin-bottom: 20px;
   }
 
+  .gedung-card .overlay h5 {
+    font-size: 14px;
+  }
+
+  .gedung-card .overlay p {
+    font-size: 12px;
+  }
+
   .image-container {
-    height: 180px;
+    height: 150px;
   }
 
   .scroll-container {
     max-height: 150px;
+  }
+
+  .scroll-container .row {
+    flex-direction: column;
+    padding: 10px 0;
+  }
+
+  .scroll-container .col-md-4 {
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
   }
 
   .hero-text {

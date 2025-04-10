@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
 
         {/* Navbar Menu */}
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav d-flex align-items-center gap-3">
+          <ul className="navbar-nav d-flex align-items-end gap-3">
             <li className="nav-item">
               <Link
                 className={`nav-link ${location.pathname === "/" ? "active fw-bold" : ""}`}

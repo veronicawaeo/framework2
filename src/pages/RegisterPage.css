@@ -57,9 +57,7 @@
   .user-type-fields.fade {
     opacity: 0.3;
   }  
-  
-  /* Tambahkan ini juga kalau kamu pakai class custom untuk tombol */
-  
+    
   .fade {
     opacity: 0.3;
   }

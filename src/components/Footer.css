@@ -5,17 +5,17 @@
   width: 100%;
   position: relative;
   bottom: 0;
+  padding: 20px 0; /* Tambah padding untuk membuat footer lebih besar */
 }
 
 .footer-icons {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 10px;
+  gap: 20px; /* Lebih longgar antar ikon */
 }
 
 .footer-icon {
-  font-size: 24px;
+  font-size: 24px; /* Diperbesar dari 20px */
   color: #ffffff;
   transition: color 0.3s ease;
   cursor: pointer;
@@ -27,5 +27,18 @@
 
 .footer-text {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px; /* Diperbesar dari 14px */
+}
+
+.footer-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 16px; /* Sesuaikan ukuran teks link */
+}
+
+.footer-link:hover {
+  color: #6f42c1;
+  text-decoration: underline;
 }

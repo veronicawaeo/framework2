@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 interface Fasilitas {
@@ -29,7 +30,8 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
   fasilitas,
   statusRuangan,
 }) => {
-  // State untuk form input
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     namaDepan: "",
     namaBelakang: "",
@@ -39,42 +41,49 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
     dokumen: null as File | null,
   });
 
-  // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle upload dokumen
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === "application/pdf") {
       setFormData(prev => ({ ...prev, dokumen: file }));
     } else {
       alert("Hanya file PDF yang diperbolehkan.");
-      e.target.value = ""; // reset input
+      e.target.value = "";
     }
   };
 
   const totalFasilitas = fasilitas.reduce((acc, f) => acc + f.harga, 0);
   const totalHarga = harga + totalFasilitas;
 
+  const handleKonfirmasi = () => {
+    const dataToSave = {
+      identitas: formData,
+      ringkasan: {
+        userType,
+        namaRuangan,
+        namaGedung,
+        tanggal,
+        durasi,
+        harga,
+        fasilitas,
+        statusRuangan,
+        totalFasilitas,
+        totalHarga,
+      },
+    };
+    localStorage.setItem("riwayatPeminjaman", JSON.stringify(dataToSave));
+    navigate("/riwayat");
+  };
+
   return (
     <div className="bg-light py-4">
       <Container>
-        {/* --- Form Identitas --- */}
         <h5 className="mb-3">Isi Identitas</h5>
-        <Card
-            className="p-4 mb-5"
-            style={{
-                backgroundColor: "#fff",
-                boxShadow: "none",
-                border: "1px solid #e0e0e0",
-                transition: "none",
-                transform: "none" 
-            }}
-        >
-
+        <Card className="p-4 mb-5" style={{ backgroundColor: "#fff", border: "1px solid #e0e0e0" }}>
           <Form>
             <Row className="mb-3">
               <Col md={4}>
@@ -106,13 +115,12 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
                     name="nomorTelepon"
                     value={formData.nomorTelepon}
                     onChange={(e) => {
-                        const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                        setFormData(prev => ({ ...prev, nomorTelepon: onlyNums }));
+                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      setFormData(prev => ({ ...prev, nomorTelepon: onlyNums }));
                     }}
                     maxLength={15}
                     placeholder="Contoh: 081234567890"
-                />
-
+                  />
                 </Form.Group>
               </Col>
               <Col md={6}>
@@ -130,10 +138,11 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
                   <Form.Control
                     as="textarea"
                     rows={3}
-                    name="catatanTambahan (jika ada)"
+                    name="catatanTambahan"
                     placeholder="Contoh: Butuh teknisi untuk pengaturan ruangan"
                     value={formData.catatanTambahan}
                     onChange={handleChange}
+                    style={{ fontWeight: 300, color: "#333" }}
                   />
                 </Form.Group>
               </Col>
@@ -141,61 +150,50 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
           </Form>
         </Card>
 
-        {/* --- Ringkasan Konfirmasi --- */}
         <h5 className="mb-3">Konfirmasi Peminjaman</h5>
-        <Card
-        className="p-4 mb-4"
-        style={{
-            backgroundColor: "#fff",
-            boxShadow: "none",
-            border: "1px solid #e0e0e0",
-            transition: "none",
-            transform: "none"
-        }}
-        >
-        <h6><strong>{namaRuangan} - {namaGedung}</strong></h6>
+        <Card className="p-4 mb-4" style={{ backgroundColor: "#fff", border: "1px solid #e0e0e0" }}>
+          <h6><strong>{namaRuangan} - {namaGedung}</strong></h6>
 
-        <div className="mt-3 d-flex justify-content-between">
+          <div className="mt-3 d-flex justify-content-between">
             <strong>Status</strong>
             <span className="text-primary">{statusRuangan}</span>
-        </div>
+          </div>
 
-        <div className="mt-3 d-flex justify-content-between">
+          <div className="mt-3 d-flex justify-content-between">
             <strong>Hari, tanggal</strong>
             <span className="text-muted">{tanggal}</span>
-        </div>
+          </div>
 
-        <div className="mt-3 d-flex justify-content-between">
+          <div className="mt-3 d-flex justify-content-between">
             <strong>Durasi</strong>
             <span className="text-muted">{durasi} jam</span>
-        </div>
+          </div>
 
-        <div className="mt-1 d-flex justify-content-between">
+          <div className="mt-1 d-flex justify-content-between">
             <span>Total Harga Durasi</span>
             <span className="text-muted">Rp{harga.toLocaleString()}</span>
-        </div>
+          </div>
 
-
-        <div className="mt-3"><strong>Fasilitas Tambahan</strong></div>
-        {fasilitas.map((item, idx) => (
+          <div className="mt-3"><strong>Fasilitas Tambahan</strong></div>
+          {fasilitas.map((item, idx) => (
             <div className="d-flex justify-content-between text-muted" key={idx}>
-            <span>{item.nama}</span>
-            <span>Rp{item.harga.toLocaleString()} /{item.satuan}</span>
-        </div>
-        ))}
+              <span>{item.nama}</span>
+              <span>Rp{item.harga.toLocaleString()} /{item.satuan}</span>
+            </div>
+          ))}
 
-        <hr />
-        <div className="d-flex justify-content-between">
+          <hr />
+          <div className="d-flex justify-content-between">
             <strong>Total harga</strong>
             <strong className="text-dark">Rp{totalHarga.toLocaleString()}</strong>
-        </div>
+          </div>
         </Card>
 
         <div className="text-center">
           <Button
             variant="primary"
             style={{ background: '#A084DC', border: 'none', width: '250px' }}
-            onClick={() => alert("Peminjaman dikonfirmasi!")}
+            onClick={handleKonfirmasi}
           >
             Konfirmasi Peminjaman
           </Button>

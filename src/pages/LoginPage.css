@@ -57,9 +57,66 @@
   .user-type-fields.fade {
     opacity: 0.3;
   }  
-  
-  /* Tambahkan ini juga kalau kamu pakai class custom untuk tombol */
-  
+     
   .fade {
     opacity: 0.3;
   }
+
+  @media (max-width: 768px) {
+    .login-row {
+      flex-direction: column;/* row */
+      height: auto;
+    }
+  
+    .login-left {
+      height: auto;
+      padding: 2rem 1rem !important;
+      align-items: center !important;/* bagian kiri */
+      text-align: center;
+    }
+  
+    .login-left h1 {
+      font-size: 1.8rem;
+    }
+  
+    .login-left p {
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+  
+    .login-right {
+      padding: 2rem 1rem;/* bagian kanan*/
+    }
+  
+    .login-form {
+      width: 100% !important;
+    }
+  
+    .form-control {
+      font-size: 0.95rem;/* input button */
+    }
+  
+    .btn-purple {
+      font-size: 1rem;
+      padding: 0.6rem;
+    }
+  
+    .form-check-label,
+    a {
+      font-size: 0.85rem; /* teks kecil */
+    }
+  
+    .text-center {
+      font-size: 0.9rem;
+    }
+  
+    .login-logo {
+      position: relative !important;
+      margin: 0 auto 1.5rem auto !important; /* logo */
+    }
+  
+    .login-logo img {
+      width: 60px !important;
+    }
+  }
+  

@@ -48,8 +48,12 @@
   border: none;
   border-radius: 20px;
   font-weight: 500;
-  transition: background-color 0.3s ease;
   text-decoration: none;
+  padding: 8px 20px;
+  display: inline-flex; /* Biar kayak link biasa */
+  align-items: center;  /* Tengah vertikal */
+  justify-content: center;
+  height: 40px; /* Sama kayak height menu link */
 }
 
 .custom-login-btn:hover {
