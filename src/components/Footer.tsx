@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="custom-footer py-3">
+    <footer className="custom-footer py-3 mt-auto">
       <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center">
         {/* Left - Copyright */}
         <p className="footer-text mb-2 mb-md-0 text-md-start text-center">

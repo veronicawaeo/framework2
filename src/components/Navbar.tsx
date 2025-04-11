@@ -35,31 +35,23 @@ const Navbar: React.FC = () => {
           <ul className="navbar-nav d-flex align-items-end gap-3">
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/" ? "active fw-bold" : ""}`}
-                to="/"
-              >
+                className={`nav-link ${location.pathname === "/home-internal" ? "active fw-bold" : ""}`}
+                to="/home-internal">
                 Beranda
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/riwayat" ? "active fw-bold" : ""}`}
-                to="/riwayat"
-              >
+                className={`nav-link ${location.pathname === "/riwayat-internal" ? "active fw-bold" : ""}`}
+                to="/riwayat-internal">
                 Riwayat Peminjaman
               </Link>
             </li>
             <li className="nav-item">
               <Link
-                className={`nav-link ${location.pathname === "/profil" ? "active fw-bold" : ""}`}
-                to="/profil"
-              >
+                className={`nav-link ${location.pathname === "/profil-internal" ? "active fw-bold" : ""}`}
+                to="/profil-internal">
                 Profil
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/login" className="custom-login-btn px-4 py-2">
-                Login
               </Link>
             </li>
           </ul>

@@ -92,6 +92,7 @@ body {
   border-radius: 12px;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  z-index: 1055 !important;
   -webkit-backdrop-filter: none !important;
 }
 

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import './LoginPage.css';
+import '../eksternal/LoginPage-eksternal.css';
 
 
-const LoginPage = () => {
+const LoginPageEkstern = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -17,27 +17,20 @@ const LoginPage = () => {
     };
   }, []);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    try {
-      // Simulasi login, misalnya Anda punya backend nanti
-      const userType = email.includes('@unsrat.ac.id') ? 'civitas' : 'umum';
+    // Simulasi login berhasil
+    const userType = email.endsWith('@unsrat.ac.id') ? 'civitas' : 'umum';
   
-      // Simpan ke localStorage
-      localStorage.setItem('userType', userType);
+    localStorage.setItem('token', 'fake-token');
+    localStorage.setItem('userType', userType);
+    localStorage.setItem('userName', 'User Dummy');
+    localStorage.setItem('userEmail', email);
   
-      // Redirect ke halaman sesuai userType
-      if (userType === 'civitas') {
-        navigate('/home-internal'); // folder internal
-      } else {
-        navigate('/home-internal'); // folder eksternal
-      }
-    } catch (error) {
-      console.error('Gagal login:', error);
-      alert('Login gagal. Silakan coba lagi.');
-    }
-  };  
+    alert('Login berhasil!');
+    navigate('/');
+  };
   
   
 
@@ -101,4 +94,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginPageEkstern;

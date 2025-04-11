@@ -1,11 +1,11 @@
+
 // src/pages/GedungPage.tsx
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import './GedungPage.css';
-import KonfirmasiPage from "./eksternal/KonfirmasiPage-eksternal";
+import '../eksternal/GedungPage-eksternal.css';
 
-const gedungData: { [key: string]: any } = {
-  'teknik-sipil': {
+const GedungDataEksternal: { [key: string]: any } = {
+  'teknik-sipil-eksternal': {
     name: 'Gedung Teknik Sipil',
     objectPosition: '50% 10%',
     jamOperasional: '07:00 - 18:00',
@@ -28,7 +28,7 @@ const gedungData: { [key: string]: any } = {
     image: 'images/gedungsipil2.jpeg',
   },
 
-  'jte': {
+  'jte-eksternal': {
     name: 'Gedung Teknik Elektro',
     objectPosition: '50% 90%',
     jamOperasional: '07:00 - 18:00',
@@ -63,7 +63,7 @@ const gedungData: { [key: string]: any } = {
     image: 'images/gedungjte2.jpeg',
   },
 
-  'dekanat': {
+  'dekanat-eksternal': {
     name: 'Gedung Dekanat',
     objectPosition: '50% 10%',
     jamOperasional: '07:00 - 17:00',
@@ -87,7 +87,7 @@ const gedungData: { [key: string]: any } = {
     image: 'images/gedungdekanat2.jpeg',
   },
 
-  'gedung-lab': {
+  'gedung-lab-eksternal': {
     name: 'Gedung Laboratorium',
     objectPosition: '50% 100%',
     jamOperasional: '07:00 - 20:00',
@@ -154,7 +154,7 @@ const gedungData: { [key: string]: any } = {
     image: 'images/labimg.jpeg',
   },
 
-  'gedung-pti': {
+  'gedung-pti-eksternal': {
     name: 'Gedung PTI',
     jamOperasional: '07:00 - 18:00',
     fasilitas: ['PTI-1', 'PTI-2', 'PTI-3'],
@@ -207,9 +207,10 @@ const gedungData: { [key: string]: any } = {
   },
 };
 
-const GedungPage: React.FC = () => {
-  const { gedungId } = useParams();
-  const gedung = gedungData[gedungId ?? ''];
+const GedungPageEksternal: React.FC = () => {
+
+  const { gedungIdEksternal } = useParams();
+  const gedungEks = GedungDataEksternal[gedungIdEksternal ?? ''];
 
   const [tanggal, setTanggal] = useState<string>('');
   const [jamMulai, setJamMulai] = useState<string>('09:00');
@@ -222,7 +223,7 @@ const GedungPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleKonfirmasi = () => {
-    const ruanganData = gedung.ruangan.find((r: any) => r.nama === ruanganDipilih);
+    const ruanganData = gedungEks.ruangan.find((r: any) => r.nama === ruanganDipilih);
     const fasilitasTerpilih = fasilitasDipilih[ruanganDipilih] || [];
 
     const durasi =
@@ -234,9 +235,9 @@ const GedungPage: React.FC = () => {
       fasilitasTerpilih.includes(f.nama)
     );
 
-    navigate('/konfirmasi', {
+    navigate('/konfirmasi-eksternal', {
       state: {
-        namaGedung: gedung.name,
+        namaGedung: gedungEks.name,
         namaRuangan: ruanganDipilih,
         tanggal,
         durasi,
@@ -267,7 +268,7 @@ const GedungPage: React.FC = () => {
     setRuanganDipilih(namaRuangan);
   };  
 
-  if (!gedung) {
+  if (!gedungEks) {
     return <div className="text-center mt-5">Gedung tidak ditemukan.</div>;
   }
 
@@ -277,14 +278,14 @@ const GedungPage: React.FC = () => {
       
       <div className="position-relative mb-4 rounded overflow-hidden" style={{ maxHeight: '400px' }}>
       <img
-        src={`/${gedung.image}`}
-        alt={gedung.name}
+        src={`/${gedungEks.image}`}
+        alt={gedungEks.name}
         className="img-fluid w-100"
         style={{
           height: '400px',
           objectFit: 'cover',
           filter: 'brightness(0.4)',
-          objectPosition: gedung.objectPosition || 'center',
+          objectPosition: gedungEks.objectPosition || 'center',
         }}
       />
 
@@ -292,9 +293,9 @@ const GedungPage: React.FC = () => {
         className="position-absolute top-50 start-50 translate-middle text-white text-center"
         style={{ textShadow: '0 2px 4px rgba(0,0,0,0.6)' }}
       >
-        <h2 className="fw-bold">{gedung.name}</h2>
-        {gedung.jamOperasional && (
-          <p className="mt-1 mb-0">Jam Operasional: {gedung.jamOperasional}</p>
+        <h2 className="fw-bold">{gedungEks.name}</h2>
+        {gedungEks.jamOperasional && (
+          <p className="mt-1 mb-0">Jam Operasional: {gedungEks.jamOperasional}</p>
         )}
       </div>
     </div>
@@ -346,7 +347,7 @@ const GedungPage: React.FC = () => {
 
       <h4 className="mt-5 mb-3 fw-semibold">Fasilitas Gedung</h4>
       <div className="row">
-        {gedung.fasilitas.map((fasilitas: string, index: number) => (
+        {gedungEks.fasilitas.map((fasilitas: string, index: number) => (
           <div key={index} className="col-md-3 mb-3">
             <div className="border p-3 rounded text-center bg-light">
               <i className="bi bi-building me-2"></i> {fasilitas}
@@ -357,7 +358,7 @@ const GedungPage: React.FC = () => {
 
       <h4 className="mt-5 mb-3 fw-semibold">Pilih Ruangan</h4>
       <div className="row">
-        {gedung.ruangan.map((room: any, idx: number) => (
+        {gedungEks.ruangan.map((room: any, idx: number) => (
           <div key={idx} className="col-md-6 mb-4">
             <div className="card shadow-sm">
               {room.image && (
@@ -416,7 +417,7 @@ const GedungPage: React.FC = () => {
                                 className="form-check-label ms-2"
                                 htmlFor={`${room.nama}-${item.nama}`}
                               >
-                                {item.nama} - Rp{item.harga.toLocaleString()}
+                                {item.nama} - Rp{(item.harga || 0).toLocaleString()}
                               </label>
                             </li>
                           ))}
@@ -443,4 +444,4 @@ const GedungPage: React.FC = () => {
   );
 };
 
-export default GedungPage;
+export default GedungPageEksternal;

@@ -20,7 +20,7 @@ interface KonfirmasiPageProps {
   statusRuangan: string;
 }
 
-const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
+const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
   userType,
   namaRuangan,
   namaGedung,
@@ -76,7 +76,7 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
       },
     };
     localStorage.setItem("riwayatPeminjaman", JSON.stringify(dataToSave));
-    navigate("/riwayat");
+    navigate("/riwayat-internal");
   };
 
   return (
@@ -171,36 +171,43 @@ const KonfirmasiPage: React.FC<KonfirmasiPageProps> = ({
 
           <div className="mt-1 d-flex justify-content-between">
             <span>Total Harga Durasi</span>
-            <span className="text-muted">Rp{harga.toLocaleString()}</span>
+            <span className="text-muted">Rp0</span>
           </div>
 
           <div className="mt-3"><strong>Fasilitas Tambahan</strong></div>
-          {fasilitas.map((item, idx) => (
-            <div className="d-flex justify-content-between text-muted" key={idx}>
-              <span>{item.nama}</span>
-              <span>Rp{item.harga.toLocaleString()} /{item.satuan}</span>
+       
+            <div className="d-flex justify-content-between text-muted">
+              <span>Mic Wireless</span>
+              <span>Rp0</span>
             </div>
-          ))}
 
           <hr />
           <div className="d-flex justify-content-between">
             <strong>Total harga</strong>
-            <strong className="text-dark">Rp{totalHarga.toLocaleString()}</strong>
+            <strong className="text-dark">Rp0</strong>
           </div>
         </Card>
 
         <div className="text-center">
           <Button
-            variant="primary"
-            style={{ background: '#A084DC', border: 'none', width: '250px' }}
-            onClick={handleKonfirmasi}
-          >
-            Konfirmasi Peminjaman
-          </Button>
+                    variant="primary"
+                    style={{
+                      backgroundColor: '#A084DC',
+                      border: 'none',
+                      width: '250px',
+                      color: 'white',
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#866bc5')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#A084DC')}
+                    onClick={handleKonfirmasi}
+                  >
+                    Konfirmasi Peminjaman
+                  </Button>
         </div>
       </Container>
     </div>
   );
 };
 
-export default KonfirmasiPage;
+export default KonfirmasiPageInternal;

@@ -1,47 +1,64 @@
 import React, { useState } from 'react';
 import './AdmPage.css';
 
+interface Partner {
+  gedung: string;
+  name: string;
+  email: string;
+  contact: string;
+  bookingDate: string;
+  status: 'Approved' | 'Rejected' | 'Pending';
+}
+
 const AdmPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState<any>(null);
-
-  const data = [
+  const [selectedPartnerIndex, setSelectedPartnerIndex] = useState<number | null>(null);
+  const [partners, setPartners] = useState<Partner[]>([
     {
-      idRoom: "Viator",
+      gedung: "JTE",
       name: "Viator Inc.",
       email: "ahli@gmail.com",
       contact: "+932354144444",
-      bookingDate: "March 07, 2024",
+      bookingDate: "March 07, 2025",
       status: "Approved",
     },
     {
-      idRoom: "Airbnb",
+      gedung: "Sipil",
       name: "Airbnb LLC",
       email: "chris@airbnb.com",
       contact: "+932354144444",
-      bookingDate: "March 07, 2024",
+      bookingDate: "March 07, 2025",
       status: "Rejected",
     }
-  ];
+  ]);
 
-  const handleEditClick = (partner: any) => {
-    setSelectedPartner(partner);
+  const handleEditClick = (index: number) => {
+    setSelectedPartnerIndex(index);
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setSelectedPartner(null);
+    setSelectedPartnerIndex(null);
+  };
+
+  const updateStatus = (newStatus: 'Approved' | 'Rejected') => {
+    if (selectedPartnerIndex !== null) {
+      const updated = [...partners];
+      updated[selectedPartnerIndex].status = newStatus;
+      setPartners(updated);
+      closeModal();
+    }
   };
 
   return (
     <div className="admin-container min-vh-100">
       {/* Ringkasan */}
       <div className="summary-cards">
-        <div className="card total">Total Booked <span>300</span></div>
-        <div className="card approved">Approved <span>260</span></div>
-        <div className="card pending">Pending <span>29</span></div>
-        <div className="card rejected">Rejected <span>11</span></div>
+        <div className="card total">Total Booked <span>2</span></div>
+        <div className="card approved">Approved <span>1</span></div>
+        <div className="card pending">Pending <span>0</span></div>
+        <div className="card rejected">Rejected <span>1</span></div>
       </div>
 
       {/* Tab Filter & Search */}
@@ -60,19 +77,19 @@ const AdmPage: React.FC = () => {
         <table className="table table-hover">
           <thead>
             <tr>
-              <th>ID Room</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Contact Number</th>
-              <th>Booking Date</th>
+              <th>Gedung</th>
+              <th>Peminjam</th>
+              <th>Alamat Email</th>
+              <th>Nomor Telepon</th>
+              <th>Hari/Tanggal</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((partner, idx) => (
+            {partners.map((partner, idx) => (
               <tr key={idx}>
-                <td>{partner.idRoom}</td>
+                <td>{partner.gedung}</td>
                 <td>{partner.name}</td>
                 <td>{partner.email}</td>
                 <td>{partner.contact}</td>
@@ -86,7 +103,7 @@ const AdmPage: React.FC = () => {
                   <i
                     className="bi bi-pencil-square me-2"
                     style={{ cursor: 'pointer' }}
-                    onClick={() => handleEditClick(partner)}
+                    onClick={() => handleEditClick(idx)}
                   ></i>
                   <i className="bi bi-trash3" style={{ cursor: 'pointer' }}></i>
                 </td>
@@ -96,16 +113,33 @@ const AdmPage: React.FC = () => {
         </table>
       </div>
 
-      {/* Modal Edit */}
-      {showModal && selectedPartner && (
+      {/* Modal */}
+      {showModal && selectedPartnerIndex !== null && (
         <div className="modal-overlay">
           <div className="modal-box">
-            <h5>Edit Booking</h5>
-            <p><strong>Name:</strong> {selectedPartner.name}</p>
-            <p><strong>Email:</strong> {selectedPartner.email}</p>
-            <p><strong>Contact:</strong> {selectedPartner.contact}</p>
-            <p><strong>Status:</strong> {selectedPartner.status}</p>
-            <button className="btn btn-secondary mt-3" onClick={closeModal}>Close</button>
+            <h5>Ubah Status Booking</h5>
+            <p><strong>Nama:</strong> {partners[selectedPartnerIndex].name}</p>
+            <p><strong>Email:</strong> {partners[selectedPartnerIndex].email}</p>
+            <p><strong>Kontak:</strong> {partners[selectedPartnerIndex].contact}</p>
+
+            <div className="d-flex justify-content-around mt-4">
+              <button
+                className="btn btn-success"
+                onClick={() => updateStatus('Approved')}
+              >
+                ✅ Approve
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => updateStatus('Rejected')}
+              >
+                ❌ Reject
+              </button>
+            </div>
+
+            <button className="btn btn-secondary mt-3 w-100" onClick={closeModal}>
+              Batal
+            </button>
           </div>
         </div>
       )}

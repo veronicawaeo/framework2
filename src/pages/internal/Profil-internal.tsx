@@ -1,8 +1,15 @@
 import React from 'react';
-import './Profil.css';
+import '../internal/Profil-internal.css'; // Perhatikan foldernya
+import { useNavigate } from 'react-router-dom';
 
-const Profil: React.FC = () => {
-  const fotoURL = 'https://i.pinimg.com/736x/b5/80/6e/b5806e111517f41b88f470a7a9db55db.jpg'; // Ganti dengan URL avatar pengguna
+const ProfilInternal: React.FC = () => {
+  const navigate = useNavigate();
+  const fotoURL = 'https://i.pinimg.com/736x/b5/80/6e/b5806e111517f41b88f470a7a9db55db.jpg';
+
+  const handleLogout = () => {
+    localStorage.removeItem('userType'); // Hapus session login
+    navigate('/'); // Arahkan ke halaman login
+  };
 
   return (
     <div className="profil-wrapper">
@@ -13,7 +20,8 @@ const Profil: React.FC = () => {
           </div>
           <div className="profil-text">
             <div className="profil-nama">Frico Putung</div>
-            <div className="profil-email">fricoputung@gmail.com</div>
+            <div className="profil-email">fricoputung@student.unsrat.ac.id</div>
+            
           </div>
         </div>
 
@@ -34,9 +42,16 @@ const Profil: React.FC = () => {
             <div className="value">Fakultas Teknik</div>
           </div>
         </div>
+
+        {/* Tombol Logout */}
+        <div className="profil-actions mt-4 text-center">
+          <button className="btn btn-danger px-4" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Profil;
+export default ProfilInternal;

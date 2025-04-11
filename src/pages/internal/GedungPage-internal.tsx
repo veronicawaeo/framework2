@@ -1,11 +1,10 @@
 // src/pages/GedungPage.tsx
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import './GedungPage.css';
-import KonfirmasiPage from "./eksternal/KonfirmasiPage-eksternal";
+import '../internal/GedungPage-internal.css';
 
 const gedungData: { [key: string]: any } = {
-  'teknik-sipil': {
+  'teknik-sipil-internal': {
     name: 'Gedung Teknik Sipil',
     objectPosition: '50% 10%',
     jamOperasional: '07:00 - 18:00',
@@ -15,20 +14,19 @@ const gedungData: { [key: string]: any } = {
         nama: 'Auditorium Sipil',
         lokasi: 'Lantai 6',
         kapasitas: 200,
-        harga: 500000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Mic Wireless', harga: 25000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'Speaker Besar', harga: 75000 },
+          { nama: 'Mic Wireless'},
+          { nama: 'Proyektor'},
+          { nama: 'Whiteboard'},
+          { nama: 'Speaker Besar'},
         ],
       },
     ],
     image: 'images/gedungsipil2.jpeg',
   },
 
-  'jte': {
+  'jte-internal': {
     name: 'Gedung Teknik Elektro',
     objectPosition: '50% 90%',
     jamOperasional: '07:00 - 18:00',
@@ -38,32 +36,30 @@ const gedungData: { [key: string]: any } = {
         nama: 'Creative Room',
         lokasi: 'Lantai 2',
         kapasitas: 120,
-        harga: 200000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'HDMI Kabel', harga: 5000 },
-          { nama: 'TV', harga: 40000 },
+          { nama: 'Whiteboard'},
+          { nama: 'Proyektor'},
+          { nama: 'HDMI Kabel'},
+          { nama: 'TV'},
         ],
       },
       {
         nama: 'Ruang Sidang',
         lokasi: 'Lantai 3 - JTE 11',
         kapasitas: 25,
-        harga: 150000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'HDMI Kabel', harga: 5000 },
-          { nama: 'TV', harga: 40000 },  
+          { nama: 'Whiteboard'},
+          { nama: 'HDMI Kabel'},
+          { nama: 'TV'},  
         ],
       },
     ],
     image: 'images/gedungjte2.jpeg',
   },
 
-  'dekanat': {
+  'dekanat-internal': {
     name: 'Gedung Dekanat',
     objectPosition: '50% 10%',
     jamOperasional: '07:00 - 17:00',
@@ -73,21 +69,20 @@ const gedungData: { [key: string]: any } = {
         nama: 'Auditorium',
         lokasi: 'Lantai 5',
         kapasitas: 150,
-        harga: 200000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Mic Wireless', harga: 25000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'Speaker Besar', harga: 75000 },
-          { nama: 'Keyboard', harga: 120000 },
+          { nama: 'Mic Wireless'},
+          { nama: 'Proyektor'},
+          { nama: 'Whiteboard'},
+          { nama: 'Speaker Besar'},
+          { nama: 'Keyboard'},
         ],
       },
     ],
     image: 'images/gedungdekanat2.jpeg',
   },
 
-  'gedung-lab': {
+  'gedung-lab-internal': {
     name: 'Gedung Laboratorium',
     objectPosition: '50% 100%',
     jamOperasional: '07:00 - 20:00',
@@ -97,64 +92,60 @@ const gedungData: { [key: string]: any } = {
         nama: 'Lab Tik & Siber',
         lokasi: 'Lantai 3',
         kapasitas: 20,
-        harga: 300000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'TV', harga: 40000 },
-          { nama: 'Switch LAN', harga: 50000 },
-          { nama: 'Meja Tambahan', harga: 30000 },
-          { nama: 'Headset', harga: 20000 },
-          { nama: 'Speaker Kecil', harga: 25000 },
+          { nama: 'Monitor'},
+          { nama: 'TV'},
+          { nama: 'Switch LAN'},
+          { nama: 'Meja Tambahan'},
+          { nama: 'Headset'},
+          { nama: 'Speaker Kecil'},
         ],
       },
       {
         nama: 'Lab Multimedia',
         lokasi: 'Lantai 3',
         kapasitas: 25,
-        harga: 250000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'TV', harga: 40000 },
-          { nama: 'Kamera DSLR', harga: 150000 },
-          { nama: 'Tripod', harga: 30000 },
-          { nama: 'Meja Tambahan', harga: 30000 },
+          { nama: 'Monitor'},
+          { nama: 'TV'},
+          { nama: 'Kamera DSLR'},
+          { nama: 'Tripod'},
+          { nama: 'Meja Tambahan'},
         ],
       },
       {
         nama: 'Lab TBD',
         lokasi: 'Lantai 3',
         kapasitas: 30,
-        harga: 200000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'TV', harga: 40000 },
-          { nama: 'Terminal', harga: 20000 },
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'Meja Tambahan', harga: 30000 },
+          { nama: 'Monitor'},
+          { nama: 'TV'},
+          { nama: 'Terminal'},
+          { nama: 'Whiteboard'},
+          { nama: 'Meja Tambahan'},
         ],
       },
       {
         nama: 'Lab RPL',
         lokasi: 'Lantai 3',
         kapasitas: 15,
-        harga: 150000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'TV', harga: 40000 },
-          { nama: 'Whiteboard', harga: 20000 },
-          { nama: 'Switch LAN', harga: 50000 },
-          { nama: 'Meja Tambahan', harga: 30000 },
+          { nama: 'Monitor'},
+          { nama: 'TV'},
+          { nama: 'Whiteboard'},
+          { nama: 'Switch LAN'},
+          { nama: 'Meja Tambahan'},
         ],
       },
     ],
     image: 'images/labimg.jpeg',
   },
 
-  'gedung-pti': {
+  'gedung-pti-internal': {
     name: 'Gedung PTI',
     jamOperasional: '07:00 - 18:00',
     fasilitas: ['PTI-1', 'PTI-2', 'PTI-3'],
@@ -163,14 +154,13 @@ const gedungData: { [key: string]: any } = {
         nama: 'PTI-1',
         lokasi: 'Lantai 2',
         kapasitas: 40,
-        harga: 200000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'Mic Wireless', harga: 50000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'Speaker', harga: 30000 },
-          { nama: 'Kursi Tambahan', harga: 20000 },
+          { nama: 'Monitor'},
+          { nama: 'Mic Wireless'},
+          { nama: 'Proyektor'},
+          { nama: 'Speaker'},
+          { nama: 'Kursi Tambahan'},
 
         ],
       },
@@ -178,28 +168,26 @@ const gedungData: { [key: string]: any } = {
         nama: 'PTI-2',
         lokasi: 'Lantai 2',
         kapasitas: 35,
-        harga: 180000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'Mic Wireless', harga: 50000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'Laser Pointer', harga: 25000 },
-          { nama: 'Kursi Tambahan', harga: 20000 },
+          { nama: 'Monitor'},
+          { nama: 'Mic Wireless'},
+          { nama: 'Proyektor'},
+          { nama: 'Laser Pointer'},
+          { nama: 'Kursi Tambahan'},
         ],
       },
       {
         nama: 'PTI-3',
         lokasi: 'Lantai 2',
         kapasitas: 30,
-        harga: 160000,
         image: 'images/gedungsipil2.jpeg',
         fasilitasTambahan: [
-          { nama: 'Monitor', harga: 70000 },
-          { nama: 'Mic Wireless', harga: 50000 },
-          { nama: 'Proyektor', harga: 100000 },
-          { nama: 'Terminal', harga: 20000 },
-          { nama: 'Kursi Tambahan', harga: 20000 },
+          { nama: 'Monitor'},
+          { nama: 'Mic Wireless'},
+          { nama: 'Proyektor'},
+          { nama: 'Terminal'},
+          { nama: 'Kursi Tambahan'},
         ],
       },
     ],
@@ -207,7 +195,7 @@ const gedungData: { [key: string]: any } = {
   },
 };
 
-const GedungPage: React.FC = () => {
+const GedungPageInternal: React.FC = () => {
   const { gedungId } = useParams();
   const gedung = gedungData[gedungId ?? ''];
 
@@ -234,15 +222,14 @@ const GedungPage: React.FC = () => {
       fasilitasTerpilih.includes(f.nama)
     );
 
-    navigate('/konfirmasi', {
+    navigate('/konfirmasi-internal', {
       state: {
         namaGedung: gedung.name,
         namaRuangan: ruanganDipilih,
         tanggal,
         durasi,
-        harga: ruanganData.harga,
         fasilitas: fasilitasFinal,
-        statusRuangan: 'Tersedia', // Kamu bisa ganti ini kalau mau ngecek ketersediaan beneran
+        statusRuangan: 'Tersedia', 
         userType,
       },
     });
@@ -388,13 +375,10 @@ const GedungPage: React.FC = () => {
                 <p className="card-text mb-1">Lokasi: {room.lokasi ?? '-'}</p>
                 <p className="card-text">Kapasitas: {room.kapasitas} orang</p>
 
+           
+
                 {userType === 'umum' && (
                   <>
-                    <p className="card-text text-success fw-semibold">
-                      Harga: Rp{room.harga.toLocaleString()}
-                    </p>
-                    <p className="card-text small text-muted">* Harga per 1 jam</p>
-
                     {room.fasilitasTambahan?.length > 0 && (
                       <div className="mt-3">
                         <p className="fw-semibold mb-1">Fasilitas Tambahan:</p>
@@ -416,7 +400,7 @@ const GedungPage: React.FC = () => {
                                 className="form-check-label ms-2"
                                 htmlFor={`${room.nama}-${item.nama}`}
                               >
-                                {item.nama} - Rp{item.harga.toLocaleString()}
+                                {item.nama}
                               </label>
                             </li>
                           ))}
@@ -443,4 +427,4 @@ const GedungPage: React.FC = () => {
   );
 };
 
-export default GedungPage;
+export default GedungPageInternal;
