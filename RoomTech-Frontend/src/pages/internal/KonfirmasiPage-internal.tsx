@@ -33,8 +33,7 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    namaDepan: "",
-    namaBelakang: "",
+    namaLengkap: "",
     email: "",
     nomorTelepon: "",
     catatanTambahan: "",
@@ -88,20 +87,14 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
             <Row className="mb-3">
               <Col md={4}>
                 <Form.Group>
-                  <Form.Label>Nama Depan</Form.Label>
-                  <Form.Control name="namaDepan" placeholder="Masukkan nama depan Anda" value={formData.namaDepan} onChange={handleChange} />
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group>
-                  <Form.Label>Nama Belakang</Form.Label>
-                  <Form.Control name="namaBelakang" placeholder="Masukkan nama belakang Anda" value={formData.namaBelakang} onChange={handleChange} />
+                  <Form.Label>Nama Lengkap</Form.Label>
+                  <Form.Control name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} />
                 </Form.Group>
               </Col>
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>Alamat Email</Form.Label>
-                  <Form.Control type="email" name="email" placeholder="Masukkan alamat email Anda" value={formData.email} onChange={handleChange} />
+                  <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} />
                 </Form.Group>
               </Col>
             </Row>
@@ -119,7 +112,7 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
                       setFormData(prev => ({ ...prev, nomorTelepon: onlyNums }));
                     }}
                     maxLength={15}
-                    placeholder="Contoh: 081234567890"
+                    placeholder="Masukkan nomor telepon Anda"
                   />
                 </Form.Group>
               </Col>

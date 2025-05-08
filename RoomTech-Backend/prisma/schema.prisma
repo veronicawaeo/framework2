@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum StatusRuangan {
+  TERSEDIA
+  TIDAK_TERSEDIA
+}
+
+model user {
+  user_id       Int        @id @default(autoincrement())
+  nama          String     @db.VarChar(500)
+  email         String     @unique @db.VarChar(500)
+  nim           Int?       @unique @db.Int
+  nip           Int?       @unique @db.Int
+  nomor_telepon String?    @db.VarChar(500)
+  password      String     @db.VarChar(500)
+  identitas     identitas? @relation()
+
+  konfirmasi konfirmasi[]
+}
+
+model gedung {
+  gedung_id        Int      @id @default(autoincrement())
+  nama_gedung      String   @db.VarChar(500)
+  lokasi_gedung    String   @db.VarChar(500)
+  jam_buka         DateTime @db.Time(0)
+  jam_tutup        DateTime @db.Time(0)
+  fasilitas_gedung String   @db.VarChar(500)
+
+  ruangan    ruangan[]
+  konfirmasi konfirmasi[]
+}
+
+model ruanganDipakai {
+  ruang_id       Int    @id @default(autoincrement())
+  nama_ruangan   String @db.VarChar(500)
+  lokasi_ruangan String @db.VarChar(500)
+}
+
+model ruangan {
+  ruang_id           Int           @id @default(autoincrement())
+  gedungId           Int // foreign key ke gedung
+  nama_ruangan       String        @db.VarChar(500)
+  lokasi_ruangan     String        @db.VarChar(500)
+  status_ruangan     StatusRuangan
+  hari_pinjam        String
+  jam_mulai_pinjam   String
+  jam_selesai_pinjam String
+  kapasitas_ruangan  Int           @db.Int
+
+  fasilitas  fasilitas_ruangan[]
+  gedung     gedung              @relation(fields: [gedungId], references: [gedung_id])
+  konfirmasi konfirmasi[]
+}
+
+model fasilitas_ruangan {
+  fasilitas_id    Int    @id @default(autoincrement())
+  ruang_id        Int
+  nama_fasilitas  String @db.VarChar(500)
+  harga_fasilitas Int    @db.Int
+
+  fasilitas_ruangan ruangan @relation(fields: [ruang_id], references: [ruang_id])
+}
+
+model identitas {
+  user_id       Int    @id @default(autoincrement())
+  catatan       String @db.VarChar(500)
+  user          user   @relation(fields: [user_id], references: [user_id])
+}
+
+model konfirmasi {
+  konfirmasi_id Int           @id @default(autoincrement())
+  status        StatusRuangan
+
+  // Tambahkan foreign key untuk relasi
+  ruangan_id Int
+  user_id    Int?
+  gedung_id  Int?
+
+  // Definisikan relasi dengan benar
+  ruangan ruangan @relation(fields: [ruangan_id], references: [ruang_id])
+  user    user?   @relation(fields: [user_id], references: [user_id])
+  gedung  gedung? @relation(fields: [gedung_id], references: [gedung_id])
+}

@@ -9,13 +9,12 @@ const Home = () => {
     const userType = localStorage.getItem('userType');
 
     if (userType === 'internal') {
-      navigate('/login-internal');
-    } else if (userType === 'eksternal') {
-      navigate('/login-eksternal');
-    } else {
-      alert('Silakan lakukan registrasi terlebih dahulu untuk memilih tipe pengguna.');
       navigate('/register');
-    }
+    } else if (userType === 'eksternal') {
+      navigate('/register');
+    } else {
+      navigate('/login');
+    } 
   };
 
   const handleRegister = () => {

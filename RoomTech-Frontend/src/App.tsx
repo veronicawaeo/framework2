@@ -8,8 +8,7 @@ import ProfilInternal from './pages/internal/Profil-internal';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import RegisterPage from './pages/eksternal/RegisterPage-eksternal';
-import LoginPageEkstern from './pages/eksternal/LoginPage-eksternal';
-import LoginPageIntern from './pages/internal/LoginPage-internal';
+import LoginPage from './pages/LoginPage';
 import GedungPageInternal from './pages/internal/GedungPage-internal';
 import GedungPageEksternal from './pages/eksternal/GedungPage-eksternal';
 import KonfirmasiPage from './pages/eksternal/KonfirmasiPage-eksternal';
@@ -24,7 +23,10 @@ import KonfirmasiPageEksternal from './pages/eksternal/KonfirmasiPage-eksternal'
 
 const AppContent = () => {
   const location = useLocation();
-  const hideLayout = location.pathname === '/register' || location.pathname === '/login'|| location.pathname === '/';
+  const hideLayout = location.pathname === '/register' 
+  || location.pathname === '/login'
+  || location.pathname === '/' 
+
 
   return (
     <>
@@ -33,8 +35,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login-internal" element={<LoginPageIntern />} />
-        <Route path="/login-eksternal" element={<LoginPageEkstern />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/home-internal" element={<HomeInternal />} />
         <Route path="/home-eksternal" element={<HomeEksternal />} />
         <Route path="/riwayat-eksternal" element={<RiwayatEksternal />} />

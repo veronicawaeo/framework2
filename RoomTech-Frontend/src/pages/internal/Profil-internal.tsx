@@ -21,27 +21,29 @@ const ProfilInternal: React.FC = () => {
           <div className="profil-text">
             <div className="profil-nama">Frico Putung</div>
             <div className="profil-email">fricoputung@student.unsrat.ac.id</div>
-            
+            <div className="profil-info-item">220211060359</div>
           </div>
         </div>
 
+        {/*
         <div className="profil-info">
           <div className="info-item">
             <div className="label">NIP / NIM</div>
             <div className="colon">:</div>
             <div className="value">220211060359</div>
           </div>
-          <div className="info-item">
+             <div className="info-item">
             <div className="label">Program Studi</div>
             <div className="colon">:</div>
             <div className="value">Teknik Informatika</div>
-          </div>
-          <div className="info-item">
+            </div>
+            <div className="info-item">
             <div className="label">Fakultas</div>
             <div className="colon">:</div>
             <div className="value">Fakultas Teknik</div>
-          </div>
+            </div> 
         </div>
+        */}
 
         {/* Tombol Logout */}
         <div className="profil-actions mt-4 text-center">
