@@ -7,7 +7,7 @@ import RiwayatInternal from './pages/internal/RiwayatPeminjaman-internal';
 import ProfilInternal from './pages/internal/Profil-internal';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import RegisterPage from './pages/eksternal/RegisterPage-eksternal';
+import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import GedungPageInternal from './pages/internal/GedungPage-internal';
 import GedungPageEksternal from './pages/eksternal/GedungPage-eksternal';

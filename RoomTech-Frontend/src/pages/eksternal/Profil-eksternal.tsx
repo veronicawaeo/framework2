@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Profil-eksternal.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,8 +6,20 @@ const ProfilEksternal: React.FC = () => {
   const navigate = useNavigate();
   const fotoURL = 'https://i.pinimg.com/736x/26/c2/87/26c287b2e86e0ee6c30e348516480c8c.jpg';
 
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Ambil data pengguna dari localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData)); // Set data pengguna
+    } else {
+      navigate('/login'); // Redirect ke login jika tidak ada data pengguna
+    }
+  }, [navigate]);
+
   const handleLogout = () => {
-    localStorage.removeItem('userType'); // Hapus session login
+    localStorage.removeItem('user'); // Hapus session login
     navigate('/'); // Redirect ke halaman login
   };
 
@@ -19,8 +31,8 @@ const ProfilEksternal: React.FC = () => {
             <img src={fotoURL} alt="User" className="profil-avatar" />
           </div>
           <div className="profil-text">
-            <div className="profil-nama">Satria Amu</div>
-            <div className="profil-email">satriaamu@gmail.com</div>
+            <div className="profil-nama">{user ? user.nama : 'Loading...'}</div>
+            <div className="profil-email">{user ? user.email : 'Loading...'}</div>
           </div>
         </div>
 

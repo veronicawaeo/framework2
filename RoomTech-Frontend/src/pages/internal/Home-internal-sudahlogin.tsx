@@ -1,5 +1,5 @@
 // src/pages/Home.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CardGedung from '../../components/CardGedung';
 import './Home-internal-sudahlogin.css';
@@ -52,6 +52,17 @@ const gedungList: GedungData[] = [
 ];
 
 const HomeInternal: React.FC = () => {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Ambil data pengguna dari localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData)); // Set data pengguna
+    } else {
+      setUser(null); // Jika tidak ada data, set user ke null
+    }
+  }, []);
 
   return (
     <div className="container mt-4">
@@ -61,7 +72,7 @@ const HomeInternal: React.FC = () => {
         <img src="images/unsratimg2.jpeg" alt="Unsrat" />
         <div className="hero-overlay"></div>
         <div className="hero-text">
-          <h1><strong>Selamat Datang, User!</strong></h1>
+          <h1><strong>Selamat Datang, {user ? user.nama : 'User'}!</strong></h1>
           <p>Pinjam ruangan dengan mudah dan cepat</p>
           
           <button

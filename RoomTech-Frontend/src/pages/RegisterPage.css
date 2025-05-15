@@ -17,7 +17,7 @@
   }
   
 .btn-purple:hover {
-    background-color: #5a3a95; /* warna saat hover */
+    background-color: #000000; /* warna saat hover */
     color: #c9affa;    
   }
 
@@ -46,17 +46,6 @@
     transform: scale(0.95);
     opacity: 0.6;
   }
-  
-  .user-type-fields {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    max-height: 500px; /* batas maksimal yang cukup besar */
-    opacity: 1;
-  }
-  
-  .user-type-fields.fade {
-    opacity: 0.3;
-  }  
     
   .fade {
     opacity: 0.3;

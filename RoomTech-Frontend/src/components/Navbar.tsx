@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
     <nav className="navbar navbar-expand-lg shadow-sm sticky-top">
       <div className="container">
         {/* Brand Logo */}
-        <Link className="navbar-brand fw-bold" to="/">
+        <Link className="navbar-brand fw-bold" to="/home-internal">
           <img
             src="/images/roomtech-fix.png"
             alt="RoomTech Logo"

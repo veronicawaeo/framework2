@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -32,6 +32,7 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  // State untuk menyimpan data form
   const [formData, setFormData] = useState({
     namaLengkap: "",
     email: "",
@@ -40,15 +41,28 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
     dokumen: null as File | null,
   });
 
+  // Load user data (misalnya, dari localStorage atau context)
+  useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setFormData(prev => ({
+          ...prev,
+          namaLengkap: userData.nama || "",
+          email: userData.email || "",
+        }));
+      }
+    }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === "application/pdf") {
-      setFormData(prev => ({ ...prev, dokumen: file }));
+      setFormData((prev) => ({ ...prev, dokumen: file }));
     } else {
       alert("Hanya file PDF yang diperbolehkan.");
       e.target.value = "";
@@ -88,13 +102,24 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>Nama Lengkap</Form.Label>
-                  <Form.Control name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} />
+                  <Form.Control
+                    name="namaLengkap"
+                    value={formData.namaLengkap}
+                    onChange={handleChange}
+                    disabled
+                  />
                 </Form.Group>
               </Col>
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>Alamat Email</Form.Label>
-                  <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} />
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    disabled
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -109,7 +134,7 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
                     value={formData.nomorTelepon}
                     onChange={(e) => {
                       const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                      setFormData(prev => ({ ...prev, nomorTelepon: onlyNums }));
+                      setFormData((prev) => ({ ...prev, nomorTelepon: onlyNums }));
                     }}
                     maxLength={15}
                     placeholder="Masukkan nomor telepon Anda"
@@ -168,11 +193,11 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
           </div>
 
           <div className="mt-3"><strong>Fasilitas Tambahan</strong></div>
-       
-            <div className="d-flex justify-content-between text-muted">
-              <span>Mic Wireless</span>
-              <span>Rp0</span>
-            </div>
+
+          <div className="d-flex justify-content-between text-muted">
+            <span>Mic Wireless</span>
+            <span>Rp0</span>
+          </div>
 
           <hr />
           <div className="d-flex justify-content-between">
@@ -183,20 +208,20 @@ const KonfirmasiPageInternal: React.FC<KonfirmasiPageProps> = ({
 
         <div className="text-center">
           <Button
-                    variant="primary"
-                    style={{
-                      backgroundColor: '#A084DC',
-                      border: 'none',
-                      width: '250px',
-                      color: 'white',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#866bc5')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#A084DC')}
-                    onClick={handleKonfirmasi}
-                  >
-                    Konfirmasi Peminjaman
-                  </Button>
+            variant="primary"
+            style={{
+              backgroundColor: '#A084DC',
+              border: 'none',
+              width: '250px',
+              color: 'white',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#866bc5')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#A084DC')}
+            onClick={handleKonfirmasi}
+          >
+            Konfirmasi Peminjaman
+          </Button>
         </div>
       </Container>
     </div>

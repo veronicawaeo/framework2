@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -39,6 +39,18 @@ const KonfirmasiPageEksternal: React.FC<KonfirmasiPageProps> = ({
     catatanTambahan: "",
     dokumen: null as File | null,
   });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setFormData(prev => ({
+        ...prev,
+        namaLengkap: userData.nama || "",
+        email: userData.email || "",
+      }));
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -88,13 +100,24 @@ const KonfirmasiPageEksternal: React.FC<KonfirmasiPageProps> = ({
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>Nama Lengkap</Form.Label>
-                  <Form.Control name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} />
+                  <Form.Control 
+                    name="namaLengkap" 
+                    value={formData.namaLengkap} 
+                    onChange={handleChange} 
+                    disabled 
+                  />
                 </Form.Group>
               </Col>
               <Col md={4}>
                 <Form.Group>
                   <Form.Label>Alamat Email</Form.Label>
-                  <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} />
+                  <Form.Control 
+                    type="email" 
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    disabled 
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -139,6 +162,7 @@ const KonfirmasiPageEksternal: React.FC<KonfirmasiPageProps> = ({
 
         <h5 className="mb-3">Konfirmasi Peminjaman</h5>
         <Card className="p-4 mb-4" style={{ backgroundColor: "#fff", border: "1px solid #e0e0e0" }}>
+          {/* Konfirmasi dan Fasilitas */}
           <h6><strong>Lab Tik & Siber - Gedung Laboratorium</strong></h6>
 
           <div className="mt-3 d-flex justify-content-between">
@@ -162,11 +186,11 @@ const KonfirmasiPageEksternal: React.FC<KonfirmasiPageProps> = ({
           </div>
 
           <div className="mt-3"><strong>Fasilitas Tambahan</strong></div>
-       
-            <div className="d-flex justify-content-between text-muted">
-              <span>Monitor</span>
-              <span>Rp560,000</span>
-            </div>
+
+          <div className="d-flex justify-content-between text-muted">
+            <span>Monitor</span>
+            <span>Rp560,000</span>
+          </div>
 
           <hr />
           <div className="d-flex justify-content-between">
@@ -176,22 +200,21 @@ const KonfirmasiPageEksternal: React.FC<KonfirmasiPageProps> = ({
         </Card>
 
         <div className="text-center">
-        <Button
-          variant="primary"
-          style={{
-            backgroundColor: '#A084DC',
-            border: 'none',
-            width: '250px',
-            color: 'white',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#866bc5')}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#A084DC')}
-          onClick={handleKonfirmasi}
-        >
-          Konfirmasi Peminjaman
-        </Button>
-
+          <Button
+            variant="primary"
+            style={{
+              backgroundColor: '#A084DC',
+              border: 'none',
+              width: '250px',
+              color: 'white',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#866bc5')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#A084DC')}
+            onClick={handleKonfirmasi}
+          >
+            Konfirmasi Peminjaman
+          </Button>
         </div>
       </Container>
     </div>

@@ -4,7 +4,7 @@ import './RegisterPage-eksternal.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link, useNavigate } from "react-router-dom";
 
-const RegisterPage = () => {
+const RegisterPageEksternal = () => {
   const [userType, setUserType] = useState<'civitas' | 'umum'>('civitas');
   const [nama, setNama] = useState('');
   const [email, setEmail] = useState('');
@@ -161,4 +161,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default RegisterPageEksternal;
