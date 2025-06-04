@@ -47,10 +47,12 @@ const LoginPage = () => {
 
       // Redirect ke halaman home
       navigate("/home-internal")
-    } catch (error: any) {
+    } 
+    catch (error: any) {
       console.error("Gagal login:", error)
       setError(error.message || "Login gagal. Silakan coba lagi.")
-    } finally {
+    } 
+    finally {
       setLoading(false)
     }
   }

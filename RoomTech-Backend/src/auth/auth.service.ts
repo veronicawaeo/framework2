@@ -17,7 +17,7 @@ export class AuthService {
     async register(createUserDto: CreateUserdto) {
         const { nama, email, nim, nip, password } = createUserDto; // ambil data pengguna
 
-        // Check if user already exist 
+        // cek apakah email sudah terdaftar
         const existingUser = await this.prisma.user.findUnique({
             where: { email },
         });

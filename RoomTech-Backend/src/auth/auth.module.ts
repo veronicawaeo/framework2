@@ -11,11 +11,11 @@ import { PrismaService } from '../prisma/prisma.service';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: 'your-secret-key', // Ganti dengan secret key yang aman
-      signOptions: { expiresIn: '1d' }, // Token berlaku selama 1 hari
+      secret: 'your-secret-key', 
+      signOptions: { expiresIn: '1d' }, 
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController], // pakai file auth.controller.ts buat ngatur rute login & register
   providers: [AuthService, JwtStrategy, PrismaService],
   exports: [AuthService],
 })
