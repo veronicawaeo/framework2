@@ -13,61 +13,137 @@ interface GedungData {
   link: string;
 }
 
-const gedungList: GedungData[] = [
-  {
-    category: 'Fakultas Teknik',
-    title: 'Gedung Teknik Sipil',
-    description: 'Auditorium Teknik Sipil',
-    image: 'images/gedungsipil2.jpeg',
-    link: '/internal/teknik-sipil-internal'
-  },
-  {
-    category: 'Fakultas Teknik',
-    title: 'Gedung Teknik Elektro',
-    description: 'Creative Room, Ruang Sidang',
-    image: 'images/gedungjte2.jpeg',
-    link: '/internal/jte-internal'
-  },
-  {
-    category: 'Fakultas Teknik',
-    title: 'Gedung Dekanat',
-    description: 'Auditorium Dekanat',
-    image: 'images/gedungdekanat2.jpeg',
-    link: '/internal/dekanat-internal'
-  },
-  {
-    category: 'Fakultas Teknik',
-    title: 'Gedung Laboratorium',
-    description: 'Lab Tik & Siber, Lab Multimedia, Lab TBD, dan Lab RPL',
-    image: 'images/labimg.jpeg',
-    link: '/internal/gedung-lab-internal'
-  },
-  {
-    category: 'Fakultas Teknik',
-    title: 'Gedung PTI',
-    description: 'PTI-1, PTI-2, PTI-3',
-    image: 'images/ptiimg.jpeg',
-    link: '/internal/gedung-pti-internal'
-  }
-];
+// const initialGedungList: GedungData[] = [
+//   {
+//     category: 'Fakultas Teknik',
+//     title: 'Gedung Teknik Sipil',
+//     description: 'Auditorium Teknik Sipil',
+//     image: 'images/gedungsipil2.jpeg',
+//     link: '/internal/teknik-sipil-internal'
+//   },
+//   {
+//     category: 'Fakultas Teknik',
+//     title: 'Gedung Teknik Elektro',
+//     description: 'Creative Room, Ruang Sidang',
+//     image: 'images/gedungjte2.jpeg',
+//     link: '/internal/jte-internal'
+//   },
+//   {
+//     category: 'Fakultas Teknik',
+//     title: 'Gedung Dekanat',
+//     description: 'Auditorium Dekanat',
+//     image: 'images/gedungdekanat2.jpeg',
+//     link: '/internal/dekanat-internal'
+//   },
+//   {
+//     category: 'Fakultas Teknik',
+//     title: 'Gedung Laboratorium',
+//     description: 'Lab Tik & Siber, Lab Multimedia, Lab TBD, dan Lab RPL',
+//     image: 'images/labimg.jpeg',
+//     link: '/internal/gedung-lab-internal'
+//   },
+//   {
+//     category: 'Fakultas Teknik',
+//     title: 'Gedung PTI',
+//     description: 'PTI-1, PTI-2, PTI-3',
+//     image: 'images/ptiimg.jpeg',
+//     link: '/internal/gedung-pti-internal'
+//   }
+// ];
 
 const HomeInternal: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+  const [gedungList, setGedungList] = useState<GedungData[]>([]);
+  const [ruangDipakaiListState, setRuangDipakaiListState] = useState<any[]>([]);
 
   useEffect(() => {
-    // Ambil data pengguna dari localStorage
+
+    interface RuanganSimple {
+      nama_ruangan: string;
+    }
+
+    interface GedungApiResponse {
+      nama_gedung: string;
+      // fasilitas_gedung: string;
+      gambar_gedung: string;
+      gedung_id: number;
+      ruangan: RuanganSimple[]; 
+    }
+
+    const fetchGedung = async () => {
+      try {
+        console.log('Frontend: Memulai fetchGedung...'); 
+        
+        const response = await fetch('http://127.0.0.1:3001/gedung', { 
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        console.log('Frontend: Status respons API gedung:', response.status);
+
+        if (!response.ok) {
+          console.error('Frontend: Gagal mengambil data gedung, status:', response.status, await response.text()); 
+          throw new Error('Gagal mengambil data gedung');
+        }
+
+        const data: GedungApiResponse[] = await response.json();
+        console.log('Frontend: Data mentah dari API gedung (dengan ruangan):', data);
+
+        const mappedData = data.map((g: GedungApiResponse) => {
+          if (!g.nama_gedung || typeof g.gedung_id === 'undefined') { 
+            console.warn('Frontend: Data gedung tidak lengkap atau gedung_id hilang:', g);
+          }
+
+          const deskripsiRuangan = g.ruangan && g.ruangan.length > 0
+            ? g.ruangan.map(r => r.nama_ruangan).join(', ') 
+            : 'Belum ada ruangan terdaftar';
+
+          return {
+            category: 'Fakultas Teknik',
+            title: g.nama_gedung,
+            description: deskripsiRuangan,
+            image: g.gambar_gedung ? `/${g.gambar_gedung}` : '/images/default-gedung.png', 
+            link: `/internal/gedung/${g.gedung_id}`
+          };
+        });
+        console.log('Frontend: Data gedung setelah di-map:', mappedData); 
+
+        setGedungList(mappedData);
+      } catch (error) {
+        console.error("Frontend: Error fetching gedung list:", error);
+        setGedungList([]);
+      }
+    };
+
+    const fetchRuanganDipakai = async () => {
+      try {
+          const response = await fetch('http://127.0.0.1:3001/gedung/ruangan-dipakai', {
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+          });
+          if (!response.ok) throw new Error('Gagal mengambil data ruangan dipakai');
+          const data = await response.json();
+          
+          setRuangDipakaiListState(data); 
+      } catch (error) {
+          console.error("Error fetching ruangan dipakai:", error);
+          setRuangDipakaiListState([]);
+      }
+    };
+
+    fetchGedung();
+    fetchRuanganDipakai();
+
     const userData = localStorage.getItem('user');
     if (userData) {
-      setUser(JSON.parse(userData)); // Set data pengguna
+      setUser(JSON.parse(userData)); 
     } else {
-      setUser(null); // Jika tidak ada data, set user ke null
+      setUser(null); 
     }
   }, []);
 
   return (
     <div className="container mt-4">
 
-      {/* Hero Section */}
       <div className="hero-section">
         <img src="images/unsratimg2.jpeg" alt="Unsrat" />
         <div className="hero-overlay"></div>
@@ -85,7 +161,6 @@ const HomeInternal: React.FC = () => {
             Pilih Gedung Sekarang
           </button>
 
-          {/* Kotak ruangan masuk ke dalam sini */}
           <div className="custom-container mt-4">
             <div className="blur-container">
               <div className="d-flex justify-content-between align-items-center mb-4">
@@ -100,7 +175,7 @@ const HomeInternal: React.FC = () => {
                     <div className="col-md-4 info-peminjaman">Jam Peminjaman</div>
                   </div>
                   <div className="scroll-container">
-                    {ruangDipakaiList.map((ruang, index) => (
+                    {ruangDipakaiListState.map((ruang, index) => (
                       <div key={index} className="row mb-2 pb-2 align-items-center" style={{ borderBottom: '1px solid rgb(111, 111, 111)' }}>
                         <div className="col-md-4 text-muted">{ruang.nama}</div>
                         <div className="col-md-4 text-muted">{ruang.tanggal}</div>
@@ -119,12 +194,10 @@ const HomeInternal: React.FC = () => {
         </div>
       </div>
 
-
-      {/* Gedung yang tersedia */}
       <h2
         id="gedung-internal"
         className="text-center mb-4 fw-bold"
-        style={{ marginTop: '170px' }} 
+        style={{ marginTop: '200px' }} 
       >
         Gedung yang Tersedia
       </h2>

@@ -1,0 +1,44 @@
+.container-data-tidak-ditemukan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 80vh;
+    margin-bottom: 23px;
+}
+
+.button-home {
+    display: inline-block;
+    background-color: #6f42c1;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.button-home:hover {
+    background-color: #59369a;
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 576px) {
+    .container-data-tidak-ditemukan h4 {
+        font-size: 1.25rem;
+    }
+    
+    .container-data-tidak-ditemukan p {
+        font-size: 0.9rem;
+    }
+
+    .button-home {
+        width: 90%;
+        max-width: 280px;
+        padding: 10px 20px;
+    }
+}

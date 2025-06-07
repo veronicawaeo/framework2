@@ -42,7 +42,7 @@ const AppContent = () => {
         <Route path="/riwayat-internal" element={<RiwayatInternal />} />
 
         <Route path="/eksternal/:gedungIdEksternal" element={<GedungPageEksternal />} />
-        <Route path="/internal/:gedungId" element={<GedungPageInternal />} />
+        <Route path="/internal/gedung/:gedungId" element={<GedungPageInternal />} />
 
         <Route path="/profil-eksternal" element={<ProfilEksternal />} />
         <Route path="/profil-internal" element={<ProfilInternal />} />
@@ -71,17 +71,17 @@ const AppContent = () => {
           path="/konfirmasi-internal"
           element={
             <KonfirmasiPageInternal
-              userType="umum"
-              namaRuangan="Auditorium Sipil"
-              namaGedung="Gedung Teknik SIpil"
-              tanggal="Jumat, 11 April 2025"
-              durasi={8}
-              harga={0}
-              fasilitas={[
-                { nama: "Mic Wireless", harga: 0, satuan: "jam" },
-                { nama: "Monitor", harga: 0, satuan: "jam" }
-              ]}
-              statusRuangan="Ruangan Tersedia"
+              // userType="umum"
+              // namaRuangan="Auditorium Sipil"
+              // namaGedung="Gedung Teknik SIpil"
+              // tanggal="Jumat, 11 April 2025"
+              // durasi={8}
+              // harga={0}
+              // fasilitas={[
+              //   { nama: "Mic Wireless", harga: 0, satuan: "jam" },
+              //   { nama: "Monitor", harga: 0, satuan: "jam" }
+              // ]}
+              // statusRuangan="Ruangan Tersedia"
             />
           }
         />
