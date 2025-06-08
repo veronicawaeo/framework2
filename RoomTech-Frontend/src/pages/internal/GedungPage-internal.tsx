@@ -3,26 +3,58 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import './GedungPage-internal.css';
 
+// --- Mendefinisikan Tipe Data untuk Kejelasan Kode ---
+interface Fasilitas {
+  fasilitas_id: number;
+  nama_fasilitas: string;
+  harga_fasilitas: number;
+  satuan?: string;
+}
+
+interface Ruangan {
+  ruang_id: number;
+  nama_ruangan: string;
+  lokasi_ruangan: string;
+  kapasitas_ruangan: number;
+  harga_ruangan: number;
+  gambar_ruangan?: string;
+  fasilitasTambahan: Fasilitas[];
+}
+
+interface Gedung {
+  gedung_id: number;
+  nama_gedung: string;
+  gambar_gedung?: string;
+  fasilitas_gedung: string;
+  jam_buka?: string;
+  jam_tutup?: string;
+  ruangan: Ruangan[];
+}
+
 const GedungPageInternal: React.FC = () => {
   const { gedungId } = useParams<{ gedungId: string }>();
   const navigate = useNavigate();
 
-  const [gedung, setGedung] = useState<any | null>(null);
+  // --- State untuk Data ---
+  const [gedung, setGedung] = useState<Gedung | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userType, setUserType] = useState<'INTERNAL' | 'UMUM' | null>(null);
 
+  // --- State untuk Interaksi Pengguna ---
   const [tanggal, setTanggal] = useState<string>('');
   const [jamMulai, setJamMulai] = useState<string>('09:00');
   const [jamSelesai, setJamSelesai] = useState<string>('17:00');
-  const [fasilitasDipilih, setFasilitasDipilih] = useState<{ [key: string]: string[] }>({});
-  const [ruanganDipilih, setRuanganDipilih] = useState<string>('');
-  
-  // State baru untuk pesan kesalahan validasi
+  const [ruanganDipilih, setRuanganDipilih] = useState<Ruangan | null>(null);
+  const [fasilitasDipilih, setFasilitasDipilih] = useState<Set<number>>(new Set());
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const userType = localStorage.getItem('userType') || 'umum';
-
+  // --- Efek untuk Mengambil Data Awal ---
   useEffect(() => {
+    // Ambil dan set tipe pengguna dari localStorage
+    const userData = localStorage.getItem('user');
+    setUserType(userData ? JSON.parse(userData).user_type || 'UMUM' : 'UMUM');
+
     const fetchGedungDetail = async () => {
       if (!gedungId) {
         setError('ID Gedung tidak valid.');
@@ -45,22 +77,19 @@ const GedungPageInternal: React.FC = () => {
 
         const data = await response.json();
         
-        const mappedRuangan = data.ruangan.map((room: any) => {
-          const fasilitasTambahan = room.fasilitas.map((ruanganFasilitas: any) => {
-            return {
-              id: ruanganFasilitas.fasilitas.fasilitas_id,
-              nama: ruanganFasilitas.fasilitas.nama_fasilitas,
-              harga: ruanganFasilitas.fasilitas.harga_fasilitas,
-              satuan: ruanganFasilitas.fasilitas.satuan,
-            };
-          });
-          return { ...room, fasilitasTambahan };
-        });
+        // Petakan data API ke tipe data yang lebih bersih
+        const mappedGedung: Gedung = {
+          ...data,
+          ruangan: data.ruangan.map((room: any) => ({
+            ...room,
+            fasilitasTambahan: room.fasilitas.map((fas: any) => fas.fasilitas),
+          })),
+        };
         
-        setGedung({ ...data, ruangan: mappedRuangan });
+        setGedung(mappedGedung);
 
       } catch (err) {
-        setError((err as Error).message);
+        setError(err instanceof Error ? err.message : 'Terjadi kesalahan tidak dikenal');
       } finally {
         setLoading(false);
       }
@@ -69,60 +98,63 @@ const GedungPageInternal: React.FC = () => {
     fetchGedungDetail();
   }, [gedungId]);
 
+  // --- Fungsi-fungsi Handler ---
+  const handlePilihRuangan = (room: Ruangan) => {
+    setRuanganDipilih(room);
+    setFasilitasDipilih(new Set()); // Reset pilihan fasilitas saat ganti ruangan
+    setValidationError(null);
+  };
+
+  const handleToggleFasilitas = (fasilitasId: number) => {
+    setFasilitasDipilih(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(fasilitasId)) {
+        newSet.delete(fasilitasId);
+      } else {
+        newSet.add(fasilitasId);
+      }
+      return newSet;
+    });
+  };
+
   const handleKonfirmasi = () => {
-    // Validasi input. Jika gagal, tampilkan pesan error, bukan alert.
     if (!ruanganDipilih || !tanggal) {
-        setValidationError("Harap pilih ruangan dan tanggal terlebih dahulu.");
-        return;
+      setValidationError("Harap pilih ruangan dan tanggal terlebih dahulu.");
+      return;
     }
     
-    // Jika berhasil, hapus pesan error dan lanjutkan proses.
     setValidationError(null);
-    
-    const ruanganData = gedung.ruangan.find((r: any) => r.nama_ruangan === ruanganDipilih);
-    if (!ruanganData) return;
+    if (!gedung) return;
 
-    const fasilitasTerpilihUser = fasilitasDipilih[ruanganDipilih] || [];
-    const durasi = (new Date(`1970-01-01T${jamSelesai}`).getTime() - new Date(`1970-01-01T${jamMulai}`).getTime()) / (3600 * 1000);
+    const durasi = (new Date(`1970-01-01T${jamSelesai}:00`).getTime() - new Date(`1970-01-01T${jamMulai}:00`).getTime()) / (3600 * 1000);
+    if (durasi <= 0) {
+        setValidationError("Jam selesai harus setelah jam mulai.");
+        return;
+    }
 
-    const fasilitasFinal = ruanganData.fasilitasTambahan
-      .filter((f: any) => fasilitasTerpilihUser.includes(f.nama));
+    let fasilitasFinal: Fasilitas[] = [];
+    if (userType === 'UMUM') {
+      fasilitasFinal = ruanganDipilih.fasilitasTambahan.filter(f => fasilitasDipilih.has(f.fasilitas_id));
+    } else {
+      fasilitasFinal = ruanganDipilih.fasilitasTambahan; // Semua fasilitas untuk INTERNAL
+    }
 
     navigate('/konfirmasi-internal', {
       state: {
         namaGedung: gedung.nama_gedung,
         gedungId: gedung.gedung_id,
-        ruanganId: ruanganData.ruang_id,
-        namaRuangan: ruanganDipilih,
+        ruanganId: ruanganDipilih.ruang_id,
+        hargaRuangan: ruanganDipilih.harga_ruangan,
+        namaRuangan: ruanganDipilih.nama_ruangan,
         tanggal, jamMulai, jamSelesai, durasi,
         fasilitas: fasilitasFinal,
         statusRuangan: 'Tersedia',
-        userType,
       },
     });
   };
-  
-  const handleToggleFasilitas = (namaRuangan: string, namaFasilitas: string) => {
-    setFasilitasDipilih(prev => {
-        const fasilitasSaatIni = prev[namaRuangan] || [];
-        const newFasilitas = fasilitasSaatIni.includes(namaFasilitas)
-            ? fasilitasSaatIni.filter(f => f !== namaFasilitas)
-            : [...fasilitasSaatIni, namaFasilitas];
-        return { ...prev, [namaRuangan]: newFasilitas };
-    });
-  };
 
-  const handlePilihRuangan = (namaRuangan: string) => {
-      setRuanganDipilih(namaRuangan);
-      setValidationError(null); // Hapus pesan error saat ruangan dipilih
-  };
-
-  const handleTanggalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTanggal(e.target.value);
-      setValidationError(null); // Hapus pesan error saat tanggal diubah
-  };
-
-  if (loading) {
+  // --- Render Kondisional ---
+  if (loading || !userType) {
     return <div className="text-center mt-5"><h3>Memuat data gedung...</h3></div>;
   }
 
@@ -131,42 +163,50 @@ const GedungPageInternal: React.FC = () => {
       <div className="container text-center mt-5">
         <h4>Oops! Terjadi Kesalahan</h4>
         <p>{error}</p>
-        <Button onClick={() => navigate('/')} variant="primary">Kembali ke Beranda</Button>
+        <Button onClick={() => navigate(-1)} variant="primary">Kembali</Button>
       </div>
     );
   }
   
   if (!gedung) {
     return (
-        <div className="container text-center mt-5">
-            <h4>Gedung Tidak Ditemukan</h4>
-            <p>Gedung yang Anda cari tidak tersedia.</p>
-            <Button onClick={() => navigate('/')} variant="primary">Kembali ke Beranda</Button>
-        </div>
+      <div className="container text-center mt-5">
+        <h4>Gedung Tidak Ditemukan</h4>
+        <p>Gedung yang Anda cari tidak tersedia.</p>
+        <Button onClick={() => navigate('/')} variant="primary">Kembali ke Beranda</Button>
+      </div>
     );
   }
 
+  // --- Render Utama ---
   return (
     <div className="container mt-5">
-      <Link to="/" className="btn btn-outline-dark mb-4">← Kembali</Link>
+      <Link to="/home-internal" className="btn btn-outline-dark mb-4">← Kembali</Link>
       
+      {/* Header Gedung */}
       <div className="position-relative mb-4 rounded overflow-hidden" style={{ maxHeight: '400px' }}>
+        {/* --- PERBAIKAN URL GAMBAR --- */}
         <img src={gedung.gambar_gedung ? `/${gedung.gambar_gedung}` : '/images/default-gedung.png'} alt={gedung.nama_gedung} className="img-fluid w-100" style={{ height: '400px', objectFit: 'cover', filter: 'brightness(0.5)' }} />
-        <div className="position-absolute top-50 start-50 translate-middle text-white text-center">
-            <h2 className="fw-bold">{gedung.nama_gedung}</h2>
-            {gedung.jam_buka && <p>Jam Operasional: {new Date(gedung.jam_buka).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone: 'UTC'})} - {new Date(gedung.jam_tutup).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone: 'UTC'})}</p>}
+        <div className="position-absolute top-50 start-50 translate-middle text-white text-center px-3">
+          <h2 className="fw-bold">{gedung.nama_gedung}</h2>
+          {gedung.jam_buka && gedung.jam_tutup && (
+            <p>
+              Jam Operasional: {new Date(gedung.jam_buka).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone: 'UTC'})} - {new Date(gedung.jam_tutup).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', timeZone: 'UTC'})}
+            </p>
+          )}
         </div>
       </div>
-      
-      <h4 className="mt-5 mb-3 fw-semibold">Pilih Tanggal dan Waktu Peminjaman</h4>
+
+      {/* Form Pilihan Tanggal & Waktu */}
+      <h4 className="mt-5 mb-3 fw-semibold">Pilih Tanggal dan Waktu</h4>
       <div className="rounded-4 bg-white shadow-sm p-3 my-4">
-        <div className="d-flex flex-wrap border rounded-4 overflow-hidden">
-          <div className="col-md-6 border-end p-3">
+        <div className="d-flex flex-column flex-md-row border rounded-4 overflow-hidden">
+          <div className="col-12 col-md-6 border-end-md p-3">
             <strong>Hari/Tanggal</strong>
             <div className="text-muted mt-1">{tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'Pilih tanggal'}</div>
-            <input type="date" className="form-control mt-2" value={tanggal} onChange={handleTanggalChange} />
+            <input type="date" className="form-control mt-2" value={tanggal} onChange={(e) => setTanggal(e.target.value)} />
           </div>
-          <div className="col-md-6 p-3">
+          <div className="col-12 col-md-6 p-3">
             <strong>Waktu</strong>
             <div className="text-muted mt-1">{jamMulai} - {jamSelesai}</div>
             <div className="d-flex gap-2 mt-2">
@@ -178,41 +218,62 @@ const GedungPageInternal: React.FC = () => {
         </div>
       </div>
 
+      {/* Fasilitas Umum Gedung */}
       <h4 className="mt-5 mb-3 fw-semibold">Fasilitas Gedung</h4>
       <div className="row">
-        {gedung.fasilitas_gedung.split(',').map((f: string, i: number) => (
-          <div key={i} className="col-md-3 mb-3">
-            <div className="border p-3 rounded text-center bg-light">{f.trim()}</div>
+        {gedung.fasilitas_gedung.split(',').map((f, i) => (
+          <div key={i} className="col-md-4 col-sm-6 mb-3">
+            <div className="border p-3 rounded text-center bg-light h-100">{f.trim()}</div>
           </div>
         ))}
       </div>
 
+      {/* Daftar Ruangan */}
       <h4 className="mt-5 mb-3 fw-semibold">Pilih Ruangan</h4>
       <div className="row">
-        {gedung.ruangan.map((room: any) => (
+        {gedung.ruangan.map((room) => (
           <div key={room.ruang_id} className="col-md-6 mb-4">
-            <div className="card shadow-sm">
+            <div className="card shadow-sm h-100">
+              {/* --- PERBAIKAN URL GAMBAR --- */}
               <img src={room.gambar_ruangan ? `/${room.gambar_ruangan}` : '/images/default-room.png'} alt={room.nama_ruangan} className="card-img-top" style={{ height: '200px', objectFit: 'cover' }} />
-              <div className="card-body">
+              <div className="card-body d-flex flex-column">
                 <div className="form-check mb-2">
-                  <input className="form-check-input" type="radio" name="pilihRuangan" id={`ruangan-${room.ruang_id}`} checked={ruanganDipilih === room.nama_ruangan} onChange={() => handlePilihRuangan(room.nama_ruangan)} />
-                  <label className="form-check-label" htmlFor={`ruangan-${room.ruang_id}`}>Pilih Ruangan Ini</label>
+                  <input className="form-check-input" type="radio" name="pilihRuangan" id={`ruangan-${room.ruang_id}`} checked={ruanganDipilih?.ruang_id === room.ruang_id} onChange={() => handlePilihRuangan(room)} />
+                  <label className="form-check-label fw-bold" htmlFor={`ruangan-${room.ruang_id}`}>Pilih Ruangan Ini</label>
                 </div>
-                <h5 className="card-title fw-bold">{room.nama_ruangan}</h5>
-                <p className="card-text mb-1">Lokasi: {room.lokasi_ruangan ?? '-'}</p>
-                <p className="card-text">Kapasitas: {room.kapasitas_ruangan} orang</p>
+                <h5 className="card-title">{room.nama_ruangan}</h5>
+                <p className="card-text text-muted small mb-1">Lokasi: {room.lokasi_ruangan ?? '-'}</p>
+                <p className="card-text text-muted small">Kapasitas: {room.kapasitas_ruangan} orang</p>
+
+                {userType === 'UMUM' && (
+                  <p className="card-text fw-bold text-primary mt-2">
+                    Harga Sewa: Rp{room.harga_ruangan.toLocaleString('id-ID')} / jam
+                  </p>
+                )}
                 
-                {userType === 'umum' && room.fasilitasTambahan?.length > 0 && (
-                  <div className="mt-3">
-                    <p className="fw-semibold mb-1">Fasilitas Tambahan:</p>
-                    <ul className="list-unstyled mb-0">
-                      {room.fasilitasTambahan.map((item: any) => (
-                        <li key={item.id} className="form-check">
-                          <input className="form-check-input" type="checkbox" id={`${room.nama_ruangan}-${item.nama}`} checked={fasilitasDipilih[room.nama_ruangan]?.includes(item.nama) || false} onChange={() => handleToggleFasilitas(room.nama_ruangan, item.nama)} disabled={ruanganDipilih !== room.nama_ruangan}/>
-                          <label className="form-check-label ms-2" htmlFor={`${room.nama_ruangan}-${item.nama}`}>{item.nama}</label>
-                        </li>
-                      ))}
-                    </ul>
+                {room.fasilitasTambahan?.length > 0 && (
+                  <div className="mt-3 pt-3 border-top">
+                    <p className="fw-semibold mb-2">Fasilitas Tambahan:</p>
+                    {userType === 'UMUM' ? (
+                      <ul className="list-unstyled mb-0">
+                        {room.fasilitasTambahan.map((item) => (
+                          <li key={item.fasilitas_id} className="form-check">
+                            <input className="form-check-input" type="checkbox" id={`${room.ruang_id}-${item.fasilitas_id}`} checked={fasilitasDipilih.has(item.fasilitas_id)} onChange={() => handleToggleFasilitas(item.fasilitas_id)} disabled={ruanganDipilih?.ruang_id !== room.ruang_id}/>
+                            <label className="form-check-label ms-2" htmlFor={`${room.ruang_id}-${item.fasilitas_id}`}>
+                              {item.nama_fasilitas} - Rp{item.harga_fasilitas.toLocaleString('id-ID')}
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <ul className="list-unstyled mb-0 text-muted small">
+                        {room.fasilitasTambahan.map((item) => (
+                          <li key={item.fasilitas_id}>
+                            <i className="bi bi-check-circle-fill text-success me-2"></i>{item.nama_fasilitas} (Termasuk)
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 )}
               </div>
@@ -221,12 +282,11 @@ const GedungPageInternal: React.FC = () => {
         ))}
       </div>
       
-      <div className="text-center mt-auto pt-4 pb-4">
-        {/* Tombol tidak lagi disabled, validasi ditangani di onClick */}
-        <Button onClick={handleKonfirmasi} className="btn-konfirmasi">
+      {/* Tombol Konfirmasi */}
+      <div className="text-center my-4">
+        <Button onClick={handleKonfirmasi} className="btn-konfirmasi px-5 py-2">
           Konfirmasi Ruangan
         </Button>
-        {/* Menampilkan pesan error validasi jika ada */}
         {validationError && <p className="text-danger mt-2 small">{validationError}</p>}
       </div>
     </div>

@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  INTERNAL
+  UMUM
+}
+
 enum StatusRuangan {
   TERSEDIA
   TIDAK_TERSEDIA
@@ -31,10 +36,11 @@ model user {
   user_id       Int        @id @default(autoincrement())
   nama          String     @db.VarChar(500)
   email         String     @unique @db.VarChar(500)
-  nim           Int?       @unique @db.Int
-  nip           Int?       @unique @db.Int
+  nim           String?    @unique @db.VarChar(50)
+  nip           String?    @unique @db.VarChar(50)
   nomor_telepon String?    @db.VarChar(500)
   password      String     @db.VarChar(500)
+  user_type     String     @default("INTERNAL") @db.VarChar(50)
   identitas     identitas? @relation()
 
   peminjaman Peminjaman[]
@@ -53,38 +59,21 @@ model gedung {
   peminjaman Peminjaman[]
 }
 
-// model ruanganDipakai {
-//   ruang_id            Int       @id @default(autoincrement())
-//   nama_ruangan        String    @db.VarChar(500)
-//   lokasi_ruangan      String    @db.VarChar(500)
-//   tanggal_dipakai     DateTime  @db.Time(0)
-//   jam_mulai_dipakai   String    @db.VarChar(500)
-//   jam_selesai_dipakai String    @db.VarChar(500)
-// }
-
 model ruangan {
-  ruang_id           Int           @id @default(autoincrement())
-  gedungId           Int 
-  nama_ruangan       String        @db.VarChar(500)
-  lokasi_ruangan     String        @db.VarChar(500)
-  status_ruangan     StatusRuangan
-  kapasitas_ruangan  Int           @db.Int
-  gambar_ruangan     String?       @db.VarChar(500)
+  ruang_id            Int                 @id @default(autoincrement())
+  gedungId            Int
+  nama_ruangan        String              @db.VarChar(500)
+  lokasi_ruangan      String              @db.VarChar(500)
+  status_ruangan      StatusRuangan
+  kapasitas_ruangan   Int                 @db.Int
+  harga_ruangan       Int                 @default(0) @db.Int
+  gambar_ruangan      String?             @db.VarChar(500)
 
-  fasilitas  RuanganFasilitas[]
-  gedung     gedung              @relation(fields: [gedungId], references: [gedung_id])
-  peminjaman Peminjaman[]
+  fasilitas           RuanganFasilitas[]
+  gedung              gedung              @relation(fields: [gedungId], references: [gedung_id])
+  peminjaman          Peminjaman[]
 }
 
-// model fasilitas_ruangan {
-//   fasilitas_id    Int     @id @default(autoincrement())
-//   ruang_id        Int
-//   nama_fasilitas  String  @db.VarChar(500)
-//   harga_fasilitas Int     @db.Int
-//   satuan          String? @db.VarChar(50)
-
-//   ruangan ruangan @relation(fields: [ruang_id], references: [ruang_id])
-// }
 
 model Fasilitas {
   fasilitas_id    Int     @id @default(autoincrement())

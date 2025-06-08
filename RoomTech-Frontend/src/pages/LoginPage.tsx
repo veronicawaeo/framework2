@@ -3,9 +3,9 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap-icons/font/bootstrap-icons.css"
-import "./LoginPage.css"
+// import "bootstrap/dist/css/bootstrap.min.css" 
+// import "bootstrap-icons/font/bootstrap-icons.css"
+// import "./LoginPage.css" 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("")
@@ -25,9 +25,9 @@ const LoginPage = () => {
     e.preventDefault()
     setError("")
     setLoading(true)
+    console.log("--- DEBUG: Memulai proses login ---");
 
     try {
-      // Kirim request ke API login
       const response = await fetch("http://127.0.0.1:3001/auth/login", {
         method: "POST",
         headers: {
@@ -37,23 +37,49 @@ const LoginPage = () => {
       })
 
       const data = await response.json()
+      
+      // LOG 1: Tampilkan seluruh objek data yang diterima dari backend.
+      console.log("--- DEBUG: Data mentah diterima dari backend ---", data);
 
       if (!response.ok) {
+        console.error("--- DEBUG: Login GAGAL, respons tidak OK ---", data);
         throw new Error(data.message || "Login gagal")
       }
 
-      // Simpan data user ke localStorage
-      localStorage.setItem("user", JSON.stringify(data.data))
+      // LOG 2: Periksa apakah 'data.data' dan 'data.data.token' ada.
+      console.log("--- DEBUG: Memeriksa 'data.data' ---", data.data);
+      if (data.data) {
+        console.log("--- DEBUG: Memeriksa 'data.data.token' ---", data.data.token);
+      }
 
-      // Redirect ke halaman home
-      navigate("/home-internal")
+      if (data.data && data.data.token) {
+        const token = data.data.token;
+        const { token: removedToken, ...userData } = data.data;
+
+        // LOG 3: Tampilkan apa yang akan disimpan ke localStorage.
+        console.log("--- DEBUG: Data yang akan disimpan ke localStorage.setItem('token') ---", token);
+        console.log("--- DEBUG: Data yang akan disimpan ke localStorage.setItem('user') ---", JSON.stringify(userData));
+        
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("token", token);
+
+        // LOG 4: Konfirmasi setelah penyimpanan.
+        console.log("--- DEBUG: Penyimpanan ke localStorage selesai. Mengarahkan ke /home-internal ---");
+        
+        navigate("/home-internal");
+      } else {
+        console.error("--- DEBUG: Gagal, kondisi `if (data.data && data.data.token)` tidak terpenuhi. ---");
+        throw new Error("Respons login tidak valid: token tidak ditemukan.");
+      }
+
     } 
     catch (error: any) {
-      console.error("Gagal login:", error)
+      console.error("--- DEBUG: Terjadi error di dalam blok catch ---", error);
       setError(error.message || "Login gagal. Silakan coba lagi.")
     } 
     finally {
       setLoading(false)
+      console.log("--- DEBUG: Proses login selesai (blok finally) ---");
     }
   }
 

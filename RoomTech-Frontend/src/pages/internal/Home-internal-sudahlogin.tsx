@@ -219,11 +219,11 @@ const HomeInternal: React.FC = () => {
       {/* Denah Lokasi */}
       <div className="custom-container mt-4 mb-4">
         <h2 className="text-center fw-bold mb-4">Denah Lokasi Gedung</h2>
-        <div className="bg-white rounded-lg p-4 shadow-lg">
+        <div className="bg-white rounded-lg p-4 mb-5 shadow-lg">
           <div className="bg-light rounded-lg p-4 shadow-sm">
           <img
             alt="Denah Lokasi Gedung Fakultas Teknik"
-            className="img-fluid rounded-4"
+            className="img-fluid rounded-4 mb-2"
             src="images/map_gedung_fatek.png"
           />
           </div>

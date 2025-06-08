@@ -8,7 +8,8 @@
     margin-bottom: 23px;
 }
 
-.button-home {
+.btn-kembali,
+.btn-ajukan-peminjaman {
     display: inline-block;
     background-color: #6f42c1;
     color: white;
@@ -16,15 +17,13 @@
     border-radius: 8px;
     padding: 12px 24px;
     border: none;
-    cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
 }
 
-.button-home:hover {
+.btn-kembali:hover,
+.btn-ajukan-peminjaman:hover {
     background-color: #59369a;
     color: white;
-    transform: translateY(-2px);
 }
 
 @media (max-width: 576px) {

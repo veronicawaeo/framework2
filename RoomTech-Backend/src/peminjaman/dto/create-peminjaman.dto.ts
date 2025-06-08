@@ -1,13 +1,19 @@
 import { IsNotEmpty, IsString, IsInt, IsOptional, IsDateString, Matches, IsArray, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
+// --- PERBAIKAN DI SINI ---
+// Nama properti disesuaikan agar cocok dengan data dari frontend dan interface
 class FasilitasTerpilihDto {
+  @IsInt()
+  @IsNotEmpty()
+  fasilitas_id: number;
+
   @IsString()
   @IsNotEmpty()
-  nama: string;
+  nama_fasilitas: string;
 
   @IsInt()
-  harga: number;
+  harga_fasilitas: number;
 
   @IsString()
   @IsOptional()
@@ -24,6 +30,11 @@ export class CreatePeminjamanDto {
   @IsInt()
   @IsNotEmpty()
   gedungId: number;
+
+  @Transform(({ value }) => parseInt(value, 10))
+  @IsInt()
+  @IsOptional()
+  totalHarga?: number;
 
   @IsDateString()
   @IsNotEmpty()

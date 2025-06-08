@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react'; 
-// import './RiwayatPeminjaman-internal.css'; // Baris ini dihapus untuk memperbaiki error kompilasi
+// import './RiwayatPeminjaman-internal.css';
 
-// --- KOMPONEN BARU UNTUK PROGRESS BAR DINAMIS ---
 interface ProgressBarProps {
   status: string;
+  userType: 'INTERNAL' | 'UMUM' | null;
 }
 
-const ProgressBar = ({ status }: ProgressBarProps) => {
-  const steps = [
-    { name: 'Pengajuan', status: 'PENGAJUAN' },
-    { name: 'Persetujuan', status: 'MENUNGGU_PERSETUJUAN' },
-    { name: 'Disetujui', status: 'DISETUJUI' },
-  ];
-
-  // Menentukan langkah aktif berdasarkan status dari API
-  const currentStatusIndex = steps.findIndex(step => step.status === status);
-
-  const isFullyCompleted = status === 'DISETUJUI' || status === 'SELESAI';
+const ProgressBar: React.FC<ProgressBarProps> = ({ status, userType }) => {
   const isRejected = status === 'DITOLAK' || status === 'DIBATALKAN';
+  const isFullyCompleted = status === 'DISETUJUI' || status === 'SELESAI';
 
-  // Tampilan khusus jika peminjaman ditolak atau dibatalkan
-  if (isRejected) {
+ // Tampilan khusus jika peminjaman ditolak atau dibatalkan
+ if (isRejected) {
     return (
       <div className="progress-container mb-4">
         <div className="progress-step rejected">
@@ -29,31 +20,33 @@ const ProgressBar = ({ status }: ProgressBarProps) => {
         </div>
       </div>
     );
-  }
+}
 
-  // Tampilan untuk status normal
+// Definisikan langkah-langkah untuk setiap tipe user
+  const stepsInternal = ['Pengajuan', 'Persetujuan', 'Disetujui'];
+  const stepsUmum = ['Pengajuan', 'Pembayaran', 'Persetujuan', 'Disetujui'];
+  const steps = userType === 'UMUM' ? stepsUmum : stepsInternal;
+
+// Tentukan langkah aktif
+  let activeStep = -1;
+  if (status === 'PENGAJUAN') activeStep = (userType === 'UMUM' ? 1 : 1); // Untuk UMUM, Pembayaran aktif. Untuk INTERNAL, Persetujuan aktif.
+  if (status === 'MENUNGGU_PERSETUJUAN') activeStep = (userType === 'UMUM' ? 2 : 2);
+  if (isFullyCompleted) activeStep = steps.length; // Semua selesai
+
   return (
     <div className="progress-container mb-4">
-      {steps.map((step, index) => {
+      {steps.map((stepName, index) => {
         let stepClass = 'progress-step';
-        
-        if (isFullyCompleted) {
-          // Jika sudah disetujui, semua langkah selesai
+        if (index < activeStep) {
           stepClass += ' completed';
-        } else if (index <= currentStatusIndex) {
-          // Jika indeks langkah sama atau sebelum status saat ini, tandai selesai
-          stepClass += ' completed';
-        } else if (index === currentStatusIndex + 1) {
-          // Jika ini adalah langkah berikutnya, tandai aktif
+        } else if (index === activeStep) {
           stepClass += ' active';
         }
-
-        const showCheckmark = isFullyCompleted || index <= currentStatusIndex;
-
+        
         return (
-          <div key={step.name} className={stepClass}>
-            <div className="circle">{showCheckmark ? '✔' : ''}</div>
-            <p>{step.name}</p>
+          <div key={stepName} className={stepClass}>
+            <div className="circle">{index < activeStep ? '✔' : ''}</div>
+            <p>{stepName}</p>
           </div>
         );
       })}
@@ -64,29 +57,41 @@ const ProgressBar = ({ status }: ProgressBarProps) => {
 
 // --- KOMPONEN UTAMA ---
 const RiwayatInternal = () => {
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const [dataRiwayat, setDataRiwayat] = useState<any[]>([]);
-  const [currentUserName, setCurrentUserName] = useState<string>('Anda');
+ const [expandedRow, setExpandedRow] = useState<number | null>(null);
+ const [dataRiwayat, setDataRiwayat] = useState<any[]>([]);
+ const [currentUserName, setCurrentUserName] = useState<string>('Anda');
+  // MODIFIKASI: Tambahkan state untuk menyimpan tipe user
+ const [userType, setUserType] = useState<'INTERNAL' | 'UMUM' | null>(null);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setCurrentUserName(userData.nama || 'Anda'); 
-    }
+ useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const userData = JSON.parse(storedUser);
+    setCurrentUserName(userData.nama || 'Anda');
+    setUserType(userData.user_type || 'UMUM');
+  } else {
+    setUserType('UMUM');
+  }
 
-    const fetchRiwayat = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:3001/peminjaman/riwayat', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        if (!response.ok) throw new Error('Gagal mengambil riwayat peminjaman');
-        const data = await response.json();
+  const fetchRiwayat = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:3001/peminjaman/riwayat', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (!response.ok) throw new Error('Gagal mengambil riwayat peminjaman');
+      const data = await response.json();
 
-        const mappedData = data.map((item: any) => ({
-          gedung: item.gedung.nama_gedung,
+      console.log('Raw data from API:', data);
+
+    const mappedData = data.map((item: any) => {
+        const fasilitasTotal = item.fasilitas_tambahan_terpilih?.reduce((total: number, fasilitas: any) =>
+          total + (fasilitas.harga_fasilitas || 0), 0) || 0;
+        const ruanganHarga = item.ruangan?.harga_ruangan || 0;
+
+        return {
+        gedung: item.gedung.nama_gedung,
           ruangan: item.ruangan.nama_ruangan,
           tanggal: new Date(item.tanggal_pinjam).toLocaleDateString('id-ID', {
             weekday: 'long',
@@ -94,7 +99,6 @@ const RiwayatInternal = () => {
             month: 'long',
             year: 'numeric',
           }),
-          // --- PERUBAHAN 1: Menambahkan data tanggal pengajuan ---
           diajukanTanggal: new Date(item.tanggal_pemesanan).toLocaleDateString('id-ID', {
             day: 'numeric',
             month: 'long',
@@ -104,9 +108,12 @@ const RiwayatInternal = () => {
           peminjam: item.user?.nama ?? currentUserName,
           status: item.status_peminjaman.replace(/_/g, ' '),
           originalStatus: item.status_peminjaman,
-          catatanTambahan: item.catatan_tambahan, 
+          catatanTambahan: item.catatan_tambahan,
           suratIzinPath: item.surat_izin_path,
-        }));
+          totalHarga: item.total_harga || 0, 
+          kodeBilling: `88${item.peminjaman_id}${new Date(item.tanggal_pemesanan).getTime().toString().slice(-6)}`,
+          };
+        });
 
         setDataRiwayat(mappedData);
       } catch (error) {
@@ -114,90 +121,111 @@ const RiwayatInternal = () => {
       }
     };
 
-    fetchRiwayat();
-  }, [currentUserName]);
+  fetchRiwayat();
+}, [currentUserName]);
 
-  const handleStatusClick = (index: number) => {
-    setExpandedRow(expandedRow === index ? null : index);
-  };
+ const handleStatusClick = (index: number) => {
+  setExpandedRow(expandedRow === index ? null : index);
+ };
 
-  return (
-    <div className="container mt-5">
-      <h2>Riwayat Peminjaman</h2>
+ return (
+  <div className="container mt-5">
+   <h2>Riwayat Peminjaman</h2>
 
-      <div className="table-responsive mt-5 min-vh-100">
-        <table className="table table-bordered table-hover bg-light text-center">
-          <thead className="table-light">
-            <tr>
-              <th>Gedung</th>
-              <th>Ruangan</th>
-              <th>Hari/Tanggal</th>
-              <th>Jam Peminjaman</th>
-              <th>Dipinjam Oleh</th>
-              {/* --- PERUBAHAN 2: Menambahkan header kolom baru --- */}
-              <th>Diajukan Tanggal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataRiwayat.map((item, index) => (
-              <React.Fragment key={index}>
-                <tr className={expandedRow === index ? 'table-active' : ''}>
-                  <td>{item.gedung}</td>
-                  <td>{item.ruangan}</td>
-                  <td>{item.tanggal}</td>
-                  <td>{item.jam}</td>
-                  <td>{item.peminjam}</td>
-                  {/* --- PERUBAHAN 3: Menambahkan data sel baru --- */}
-                  <td>{item.diajukanTanggal}</td>
-                  <td>
-                    <span
-                      className="text-primary fw-bold text-decoration-underline"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleStatusClick(index)}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-                {expandedRow === index && (
-                  <tr>
-                    {/* --- PERUBAHAN 4: Menyesuaikan colSpan --- */}
-                    <td colSpan={7}>
-                      <div className="billing-info p-3 rounded shadow-sm bg-light text-start">
-                        <ProgressBar status={item.originalStatus} />
-                        
-                        <hr/>
+   <div className="table-responsive mt-5 min-vh-100">
+    <table className="table table-bordered table-hover bg-light text-center">
+     <thead className="table-light">
+      <tr>
+       <th>Gedung</th>
+       <th>Ruangan</th>
+       <th>Tanggal Peminjaman</th>
+       <th>Jam Peminjaman</th>
+       <th>Dipinjam Oleh</th>
+       <th>Diajukan Tanggal</th>
+       <th>Status</th>
+      </tr>
+     </thead>
+     <tbody>
+      {dataRiwayat.map((item, index) => (
+       <React.Fragment key={index}>
+        <tr className={expandedRow === index ? 'table-active' : ''}>
+         <td>{item.gedung}</td>
+         <td>{item.ruangan}</td>
+         <td>{item.tanggal}</td>
+         <td>{item.jam}</td>
+         <td>{item.peminjam}</td>
+         <td>{item.diajukanTanggal}</td>
+         <td>
+          <span
+           className="text-primary fw-bold text-decoration-underline"
+           style={{ cursor: "pointer" }}
+           onClick={() => handleStatusClick(index)}
+          >
+           {item.status}
+          </span>
+         </td>
+        </tr>
+        {expandedRow === index && (
+         <tr>
+          <td colSpan={7}>
+           <div className="billing-info p-3 rounded shadow-sm bg-light text-start">
+            <ProgressBar status={item.originalStatus} userType={userType} />
 
-                        <p><strong>Tanggal Peminjaman:</strong> {item.tanggal}</p>
-                        <p><strong>Jam Peminjaman:</strong> {item.jam}</p>
-                        {item.catatanTambahan && (
-                          <p><strong>Catatan Tambahan:</strong> {item.catatanTambahan}</p>
-                        )}
-                        {item.suratIzinPath && (
-                          <p>
-                            <strong>Surat Izin:</strong>{' '}
-                            <a 
-                              href={`http://127.0.0.1:3001/${item.suratIzinPath}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-decoration-underline"
-                            >
-                              Lihat Dokumen
-                            </a>
-                          </p>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+            <hr/>
+
+            {/* <p><strong>Tanggal Peminjaman:</strong> {item.tanggal}</p>
+            <p><strong>Jam Peminjaman:</strong> {item.jam}</p> */}
+            {item.catatanTambahan && (
+             <p><strong>Catatan Tambahan:</strong> {item.catatanTambahan}</p>
+            )}
+
+            {/* MODIFIKASI: Tampilkan harga berdasarkan tipe user */}
+            
+            {item.suratIzinPath && (
+             <p>
+              <strong>Surat Izin:</strong>{' '}
+              <a 
+               href={`http://127.0.0.1:3001/${item.suratIzinPath}`} 
+               target="_blank" 
+               rel="noopener noreferrer"
+               className="text-decoration-underline"
+              >
+               Lihat Dokumen
+              </a>
+             </p>
+            )}
+
+            {userType === 'UMUM' && (
+              <>
+                <p>
+                  <strong>Total Harga:</strong>
+                  <span style={{ color: 'red' }}>
+                    {` Rp${item.totalHarga.toLocaleString('id-ID')}`}
+                  </span>
+                </p>
+                <p className="mt-3">
+                  <strong>Kode Billing:</strong>
+                  <span className="badge bg-secondary ms-2 fs-6">{item.kodeBilling}</span>
+                </p>
+                <div className="alert alert-info mt-2" role="alert">
+                  <small>
+                    Silakan lakukan pembayaran ke ATM terdekat menggunakan Kode Billing di atas.
+                  </small>
+                </div>
+              </>
+            )}
+
+           </div>
+          </td>
+         </tr>
+        )}
+       </React.Fragment>
+      ))}
+     </tbody>
+    </table>
+   </div>
+  </div>
+ );
 };
 
 export default RiwayatInternal;

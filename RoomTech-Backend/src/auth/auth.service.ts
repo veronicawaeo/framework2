@@ -1,90 +1,145 @@
-//  Mengatur logika otentikasi
+// src/auth/auth.service.ts
 
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+ ConflictException,
+ Injectable,
+ BadRequestException,
+ InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserdto } from './dto/create.user.dto';
 import * as bcyrpt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Prisma, UserType } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private prisma: PrismaService,
-        private jwtService: JwtService,
-    ) { }
+ constructor(
+  private prisma: PrismaService,
+  private jwtService: JwtService,
+ ) {}
 
-    // fungsi register
-    async register(createUserDto: CreateUserdto) {
-        const { nama, email, nim, nip, password } = createUserDto; // ambil data pengguna
+ // fungsi register
+ async register(createUserDto: CreateUserdto) {
+  const { nama, email, nim, nip, password } = createUserDto;
 
-        // cek apakah email sudah terdaftar
-        const existingUser = await this.prisma.user.findUnique({
-            where: { email },
-        });
+  // 1. Cek duplikasi email
+  const existingUser = await this.prisma.user.findUnique({
+   where: { email },
+  });
+  if (existingUser) {
+   throw new ConflictException('Email sudah terdaftar');
+  }
 
-        if (existingUser){
-            throw new ConflictException('Email sudah terdaftar')
+  // 2. Tentukan tipe user
+  const isInternal =
+   email.endsWith('@student.unsrat.ac.id') || email.endsWith('@unsrat.ac.id');
+  const userType: UserType = isInternal ? 'INTERNAL' : 'UMUM';
+
+  // 3. Siapkan data dasar untuk disimpan
+  const hashedPassword = await bcyrpt.hash(password, 10);
+  const dataToCreate: Prisma.userCreateInput = {
+   nama,
+   email,
+   password: hashedPassword,
+   user_type: userType,
+  };
+
+  // 4. Validasi dan tambahkan nim/nip HANYA jika user adalah INTERNAL
+  if (userType === 'INTERNAL') {
+   const nimOrNipValue = nim || nip;
+   if (!nimOrNipValue) {
+    throw new BadRequestException(
+     'NIM atau NIP wajib diisi untuk pendaftaran UNSRAT.',
+    );
+   }
+
+   const parsedNimOrNip = parseInt(nimOrNipValue, 10);
+   if (isNaN(parsedNimOrNip)) {
+    throw new BadRequestException('NIM atau NIP harus berupa angka.');
+   }
+
+   // Logika untuk membedakan NIM dan NIP berdasarkan panjang karakter.
+   // Anggap NIP memiliki 15 karakter atau lebih.
+   if (nimOrNipValue.length >= 15) {
+    dataToCreate.nip = parsedNimOrNip.toString(); // Tambahkan nip ke data
+   } else {
+    dataToCreate.nim = parsedNimOrNip.toString(); // Tambahkan nim ke data
+   }
+  }
+
+  // 5. Coba buat user di database
+  try {
+   const user = await this.prisma.user.create({
+    data: dataToCreate,
+   });
+
+   return {
+    status: 201,
+    message: 'Berhasil Membuat Akun',
+    data: {
+     user_id: user.user_id,
+     email: user.email,
+     nama: user.nama,
+     nim: user.nim,
+     nip: user.nip,
+     user_type: user.user_type,
+    },
+   };
+  } catch (error) {
+   
+   if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === 'P2002'
+    ){
+        if (error.meta && error.meta.target) {
+            const field = error.meta.target;
+            throw new ConflictException(`${field} ini sudah terdaftar. Silakan gunakan yang lain.`);
+        } else {
+            throw new ConflictException('Data yang Anda masukkan sudah terdaftar.');
         }
+     }
 
-        const hashedPassword = await bcyrpt.hash(password, 10);
-
-        const user = await this.prisma.user.create({ // simpan data ke database via prisma
-            data: {
-                nama,
-                email,
-                password: hashedPassword,
-            },
-            select: {
-                user_id: true,
-                email: true,
-                password: true,
-            },
-        });
-        
-        return{ // respon ke user
-            status: 201,
-            message: "Berhasil Membuat Akun",
-            data:{
-                user_id: user.user_id,
-                email: user.email,
-                nama,
-                nim,
-                nip
-            }
-        }
+        console.error('Error tidak terduga saat registrasi:', error);
+        throw new InternalServerErrorException('Terjadi kesalahan pada server saat membuat akun.');
     }
+  }
 
-    // fungsi login
-    async login(email: string, password: string) {
-        const user = await this.prisma.user.findUnique({
-            where: { email }, // cari user bdsr email
-        });
+ // fungsi login (tidak ada perubahan)
+ async login(email: string, password: string) {
+  const user = await this.prisma.user.findUnique({
+   where: { email },
+  });
 
-        if (!user) {
-            throw new ConflictException('Email tidak terdaftar')
-        }
+  if (!user) {
+   throw new ConflictException('Email tidak terdaftar');
+  }
 
-        const isPasswordValid = await bcyrpt.compare(password, user.password); // cek password benar/salah
+  const isPasswordValid = await bcyrpt.compare(password, user.password);
 
-        if (!isPasswordValid) {
-            throw new ConflictException('Password salah')
-        }
+  if (!isPasswordValid) {
+   throw new ConflictException('Password salah');
+  }
 
-        // Generate JWT token
-        const payload = { sub: user.user_id, email: user.email };
-        const token = this.jwtService.sign(payload);
+  const payload = {
+   sub: user.user_id,
+   email: user.email,
+   user_type: user.user_type,
+  };
+  const token = this.jwtService.sign(payload);
 
-        return {
-            status: 200,
-            message: "Berhasil Masuk",
-            data: {
-                user_id: user.user_id,
-                email: user.email,
-                nama: user.nama,
-                nim: user.nim,
-                nip: user.nip,
-                token
-            }
-        }
-    }
+  return {
+   status: 200,
+   message: 'Berhasil Masuk',
+   data: {
+    user_id: user.user_id,
+    email: user.email,
+    nama: user.nama,
+    nim: user.nim,
+    nip: user.nip,
+    user_type: user.user_type,
+    token,
+   },
+  };
+ }
 }

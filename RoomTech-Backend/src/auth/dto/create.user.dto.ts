@@ -1,6 +1,6 @@
 //  Mengatur apa saja yg harus diisi saat regis
 
-import { IsArray, IsBoolean, IsEmail, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
 
 export class CreateUserdto{
     @IsString() 
@@ -9,9 +9,11 @@ export class CreateUserdto{
     @IsEmail()
     email: string
 
+    @IsOptional()
     @IsString()
     nim?: string
 
+    @IsOptional()
     @IsString()
     nip?: string
 
