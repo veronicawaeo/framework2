@@ -16,6 +16,7 @@ datasource db {
 enum UserType {
   INTERNAL
   UMUM
+  ADMIN
 }
 
 enum StatusRuangan {
@@ -25,6 +26,7 @@ enum StatusRuangan {
 
 enum StatusPeminjaman {
   PENGAJUAN
+  MENUNGGU_PEMBAYARAN
   MENUNGGU_PERSETUJUAN
   DISETUJUI
   DITOLAK

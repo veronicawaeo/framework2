@@ -3,9 +3,6 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-// import "bootstrap/dist/css/bootstrap.min.css" 
-// import "bootstrap-icons/font/bootstrap-icons.css"
-// import "./LoginPage.css" 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("")
@@ -37,8 +34,6 @@ const LoginPage = () => {
       })
 
       const data = await response.json()
-      
-      // LOG 1: Tampilkan seluruh objek data yang diterima dari backend.
       console.log("--- DEBUG: Data mentah diterima dari backend ---", data);
 
       if (!response.ok) {
@@ -46,7 +41,6 @@ const LoginPage = () => {
         throw new Error(data.message || "Login gagal")
       }
 
-      // LOG 2: Periksa apakah 'data.data' dan 'data.data.token' ada.
       console.log("--- DEBUG: Memeriksa 'data.data' ---", data.data);
       if (data.data) {
         console.log("--- DEBUG: Memeriksa 'data.data.token' ---", data.data.token);
@@ -56,17 +50,19 @@ const LoginPage = () => {
         const token = data.data.token;
         const { token: removedToken, ...userData } = data.data;
 
-        // LOG 3: Tampilkan apa yang akan disimpan ke localStorage.
         console.log("--- DEBUG: Data yang akan disimpan ke localStorage.setItem('token') ---", token);
         console.log("--- DEBUG: Data yang akan disimpan ke localStorage.setItem('user') ---", JSON.stringify(userData));
         
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("token", token);
 
-        // LOG 4: Konfirmasi setelah penyimpanan.
+        if (userData.user_type === 'ADMIN') {
+          navigate("/admin"); 
+        } else {
+          navigate("/home-internal");
+        }
+
         console.log("--- DEBUG: Penyimpanan ke localStorage selesai. Mengarahkan ke /home-internal ---");
-        
-        navigate("/home-internal");
       } else {
         console.error("--- DEBUG: Gagal, kondisi `if (data.data && data.data.token)` tidak terpenuhi. ---");
         throw new Error("Respons login tidak valid: token tidak ditemukan.");
@@ -86,7 +82,6 @@ const LoginPage = () => {
   return (
     <div className="container min-vh-100 w-100 g-0 mx-0">
       <div className="row vw-100 vh-100 g-0">
-        {/* Left Section */}
         <div className="col d-flex flex-column position-relative text-white bg-purple px-5 py-4">
           <Link to="/" className="position-absolute top-0 start-0 m-4">
             <img src="/images/roomtech-fix.png" alt="Logo RoomTech" style={{ width: "80px" }} />
@@ -101,7 +96,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="col d-flex flex-column bg-light justify-content-center px-5 py-4">
           <h2 className="fw-bold mb-3">Login</h2>
 

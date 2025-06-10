@@ -1,8 +1,6 @@
 import { IsNotEmpty, IsString, IsInt, IsOptional, IsDateString, Matches, IsArray, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
-// --- PERBAIKAN DI SINI ---
-// Nama properti disesuaikan agar cocok dengan data dari frontend dan interface
 class FasilitasTerpilihDto {
   @IsInt()
   @IsNotEmpty()

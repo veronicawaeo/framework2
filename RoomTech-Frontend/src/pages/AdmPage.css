@@ -1,67 +1,213 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #D3AAE7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1020; /* Pastikan di atas konten lain */
+}
+
+.admin-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-header-logo img {
+  height: 40px;
+}
+
+.admin-header-logo span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2e155d;
+}
+
+.admin-header-user {
+  position: relative;
+}
+
+.admin-header-user .bi-person-circle {
+  font-size: 2.2rem;
+  color: #2e155d;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.admin-header-user .bi-person-circle:hover {
+  color: #ffffff;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.75rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  width: 160px;
+  z-index: 1021;
+}
+
+.user-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.user-dropdown button:hover {
+  background-color: #aeaeae;
+}
+
 .admin-container {
-    padding: 2rem;
-    background: #f9f9f9;
-  }
-  
-  .summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-  
-  .summary-cards .card {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 500;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  
-  .card.total span { color: #333; }
-  .card.approved span { color: green; }
-  .card.pending span { color: orange; }
-  .card.rejected span { color: red; }
-  
-  .tabs .tab {
-    margin-right: 10px;
-    padding: 8px 16px;
-    border: none;
-    background: #e4e4e4;
-    border-radius: 20px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-  
-  .tabs .tab.active {
-    background: #6F42C1;
-    color: white;
-  }
-  
-  .search {
-    max-width: 200px;
-  }
-  
-  .badge.approved {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 4px 10px;
-    border-radius: 12px;
-  }
-  
-  .badge.pending {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 4px 10px;
-    border-radius: 12px;
-  }
-  
-  .badge.rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 4px 10px;
-    border-radius: 12px;
-  }
-  
+  padding: 2rem;
+  background-color: #f4f7fa;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.summary-cards .card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.summary-cards .card span {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.summary-cards .card.total span { color: #6f42c1; }
+.summary-cards .card.approved span { color: #198754; }
+.summary-cards .card.pending span { color: #ffc107; }
+.summary-cards .card.rejected span { color: #dc3545; }
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  background-color: #e9ecef;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.tabs .tab {
+  border: none;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #6c757d;
+  transition: all 0.2s ease-in-out;
+}
+
+.tabs .tab.active {
+  background-color: white;
+  color: #6f42c1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+  background-color: #f8f9fa;
+}
+
+.table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.badge {
+  padding: 0.5em 0.75em;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  color: white;
+}
+
+.badge.disetujui, .badge.approved { background-color: #198754; }
+.badge.pengajuan, .badge.pending { background-color: #ffc107; color: #333; }
+.badge.ditolak, .badge.rejected { background-color: #dc3545; }
+.badge.dibatalkan { background-color: #6c757d; }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-box .btn {
+  font-weight: 500;
+}
+
+.table i {
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.table i:hover {
+  color: #6f42c1;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.modal-header {
+  font-size: 25px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.modal-box p {
+  font-size: 1rem;
+  color: rgb(74, 74, 74);
+  margin-bottom: 5px;
+}

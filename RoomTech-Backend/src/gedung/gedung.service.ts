@@ -48,9 +48,9 @@ export class GedungService {
     return gedung;
   }
 
-  // Endpoint untuk "Ruangan Yang Sedang Dipakai" di Home
+  // Endpoint untuk "Ruangan Yang Sedang Dipakai" di beranda
   async findRuanganDipakai() {
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // Contoh filter waktu
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
     const peminjamanAktif = await this.prisma.peminjaman.findMany({
         where: {

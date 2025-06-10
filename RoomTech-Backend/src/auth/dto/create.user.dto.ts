@@ -1,5 +1,3 @@
-//  Mengatur apa saja yg harus diisi saat regis
-
 import { IsArray, IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
 
 export class CreateUserdto{

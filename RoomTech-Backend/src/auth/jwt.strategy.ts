@@ -7,19 +7,16 @@ import { PrismaService } from '../prisma/prisma.service';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private prisma: PrismaService) {
     const secret = process.env.JWT_SECRET;
-    // LOG 1: Memeriksa apakah kunci rahasia berhasil dimuat saat kelas dibuat.
     console.log(`[JwtStrategy] Constructor: JWT_SECRET ${secret ? 'berhasil dimuat.' : 'TIDAK DITEMUKAN!'}`);
     
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: secret, // Menggunakan variabel 'secret'
+      secretOrKey: secret, 
     });
   }
 
-  // Fungsi ini berjalan secara otomatis jika tanda tangan token valid.
   async validate(payload: any) {
-    // LOG 2: Menampilkan isi dari token yang berhasil diverifikasi.
     console.log('[JwtStrategy] Validate function triggered. Payload:', payload);
 
     if (!payload || !payload.sub) {
@@ -33,7 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       },
     });
 
-    // LOG 3: Memeriksa apakah pengguna ditemukan di database.
     if (!user) {
       console.error(`[JwtStrategy] Gagal: Pengguna dengan ID ${payload.sub} tidak ditemukan di database.`);
       throw new UnauthorizedException('Pengguna tidak ditemukan atau sesi tidak valid.');

@@ -6,6 +6,7 @@ import { PeminjamanModule } from './peminjaman/peminjaman.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AdminModule } from './admin/admin.module';
 import { join } from 'path';
 
 @Module({
@@ -13,7 +14,7 @@ import { join } from 'path';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..'), 
     }),
@@ -23,6 +24,7 @@ import { join } from 'path';
     PrismaModule, 
     AuthModule, 
     UserModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],

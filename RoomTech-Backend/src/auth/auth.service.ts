@@ -1,5 +1,3 @@
-// src/auth/auth.service.ts
-
 import {
  ConflictException,
  Injectable,
@@ -19,11 +17,9 @@ export class AuthService {
   private jwtService: JwtService,
  ) {}
 
- // fungsi register
  async register(createUserDto: CreateUserdto) {
   const { nama, email, nim, nip, password } = createUserDto;
 
-  // 1. Cek duplikasi email
   const existingUser = await this.prisma.user.findUnique({
    where: { email },
   });
@@ -31,12 +27,10 @@ export class AuthService {
    throw new ConflictException('Email sudah terdaftar');
   }
 
-  // 2. Tentukan tipe user
   const isInternal =
    email.endsWith('@student.unsrat.ac.id') || email.endsWith('@unsrat.ac.id');
   const userType: UserType = isInternal ? 'INTERNAL' : 'UMUM';
 
-  // 3. Siapkan data dasar untuk disimpan
   const hashedPassword = await bcyrpt.hash(password, 10);
   const dataToCreate: Prisma.userCreateInput = {
    nama,
@@ -45,7 +39,6 @@ export class AuthService {
    user_type: userType,
   };
 
-  // 4. Validasi dan tambahkan nim/nip HANYA jika user adalah INTERNAL
   if (userType === 'INTERNAL') {
    const nimOrNipValue = nim || nip;
    if (!nimOrNipValue) {
@@ -59,16 +52,13 @@ export class AuthService {
     throw new BadRequestException('NIM atau NIP harus berupa angka.');
    }
 
-   // Logika untuk membedakan NIM dan NIP berdasarkan panjang karakter.
-   // Anggap NIP memiliki 15 karakter atau lebih.
    if (nimOrNipValue.length >= 15) {
-    dataToCreate.nip = parsedNimOrNip.toString(); // Tambahkan nip ke data
+    dataToCreate.nip = parsedNimOrNip.toString(); 
    } else {
-    dataToCreate.nim = parsedNimOrNip.toString(); // Tambahkan nim ke data
+    dataToCreate.nim = parsedNimOrNip.toString(); 
    }
   }
 
-  // 5. Coba buat user di database
   try {
    const user = await this.prisma.user.create({
     data: dataToCreate,
@@ -105,7 +95,6 @@ export class AuthService {
     }
   }
 
- // fungsi login (tidak ada perubahan)
  async login(email: string, password: string) {
   const user = await this.prisma.user.findUnique({
    where: { email },
