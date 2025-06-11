@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
-// import './RiwayatPeminjaman-internal.css';
+import './RiwayatPeminjaman-internal.css';
 
 interface ProgressBarProps {
   status: string;
@@ -10,7 +10,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ status, userType }) => {
   const isRejected = status === 'DITOLAK' || status === 'DIBATALKAN';
   const isFullyCompleted = status === 'DISETUJUI' || status === 'SELESAI';
 
- // Tampilan khusus jika peminjaman ditolak atau dibatalkan
  if (isRejected) {
     return (
       <div className="progress-container mb-4">
@@ -22,16 +21,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ status, userType }) => {
     );
 }
 
-// Definisikan langkah-langkah untuk setiap tipe user
   const stepsInternal = ['Pengajuan', 'Persetujuan', 'Disetujui'];
   const stepsUmum = ['Pengajuan', 'Pembayaran', 'Persetujuan', 'Disetujui'];
   const steps = userType === 'UMUM' ? stepsUmum : stepsInternal;
 
-// Tentukan langkah aktif
   let activeStep = -1;
-  if (status === 'PENGAJUAN') activeStep = (userType === 'UMUM' ? 1 : 1); // Untuk UMUM, Pembayaran aktif. Untuk INTERNAL, Persetujuan aktif.
+  if (status === 'PENGAJUAN') activeStep = (userType === 'UMUM' ? 1 : 1); 
   if (status === 'MENUNGGU_PERSETUJUAN') activeStep = (userType === 'UMUM' ? 2 : 2);
-  if (isFullyCompleted) activeStep = steps.length; // Semua selesai
+  if (isFullyCompleted) activeStep = steps.length; 
 
   return (
     <div className="progress-container mb-4">
@@ -54,13 +51,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ status, userType }) => {
   );
 };
 
-
-// --- KOMPONEN UTAMA ---
 const RiwayatInternal = () => {
  const [expandedRow, setExpandedRow] = useState<number | null>(null);
  const [dataRiwayat, setDataRiwayat] = useState<any[]>([]);
  const [currentUserName, setCurrentUserName] = useState<string>('Anda');
-  // MODIFIKASI: Tambahkan state untuk menyimpan tipe user
  const [userType, setUserType] = useState<'INTERNAL' | 'UMUM' | null>(null);
 
  useEffect(() => {
@@ -173,13 +167,9 @@ const RiwayatInternal = () => {
 
             <hr/>
 
-            {/* <p><strong>Tanggal Peminjaman:</strong> {item.tanggal}</p>
-            <p><strong>Jam Peminjaman:</strong> {item.jam}</p> */}
             {item.catatanTambahan && (
              <p><strong>Catatan Tambahan:</strong> {item.catatanTambahan}</p>
             )}
-
-            {/* MODIFIKASI: Tampilkan harga berdasarkan tipe user */}
             
             {item.suratIzinPath && (
              <p>

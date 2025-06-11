@@ -9,18 +9,17 @@ const ProfilInternal: React.FC = () => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // Ambil data pengguna dari localStorage
     const userData = localStorage.getItem('user');
     if (userData) {
-      setUser(JSON.parse(userData)); // Set data pengguna
+      setUser(JSON.parse(userData)); 
     } else {
-      navigate('/login'); // Redirect ke login jika tidak ada data pengguna
+      navigate('/login');
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('user'); // Hapus session login
-    navigate('/'); // Redirect ke halaman login
+    localStorage.removeItem('user'); 
+    navigate('/'); 
   };
 
   return (

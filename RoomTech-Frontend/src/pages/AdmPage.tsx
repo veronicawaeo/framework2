@@ -192,7 +192,7 @@ const AdmPage: React.FC = () => {
                   </td>
                   <td>
                     <i className="bi bi-pencil-square me-2" onClick={() => openModal(p)}></i>
-                    <i className="bi bi-eye-fill" onClick={() => openModal(p)}></i>
+                    {/* <i className="bi bi-eye-fill" onClick={() => openModal(p)}></i> */}
                   </td>
                 </tr>
               ))}

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service'; // Sesuaikan path jika beda
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class GedungService {

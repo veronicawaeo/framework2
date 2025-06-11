@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import CardGedung from '../../components/CardGedung';
@@ -13,44 +12,6 @@ interface GedungData {
   link: string;
 }
 
-// const initialGedungList: GedungData[] = [
-//   {
-//     category: 'Fakultas Teknik',
-//     title: 'Gedung Teknik Sipil',
-//     description: 'Auditorium Teknik Sipil',
-//     image: 'images/gedungsipil2.jpeg',
-//     link: '/internal/teknik-sipil-internal'
-//   },
-//   {
-//     category: 'Fakultas Teknik',
-//     title: 'Gedung Teknik Elektro',
-//     description: 'Creative Room, Ruang Sidang',
-//     image: 'images/gedungjte2.jpeg',
-//     link: '/internal/jte-internal'
-//   },
-//   {
-//     category: 'Fakultas Teknik',
-//     title: 'Gedung Dekanat',
-//     description: 'Auditorium Dekanat',
-//     image: 'images/gedungdekanat2.jpeg',
-//     link: '/internal/dekanat-internal'
-//   },
-//   {
-//     category: 'Fakultas Teknik',
-//     title: 'Gedung Laboratorium',
-//     description: 'Lab Tik & Siber, Lab Multimedia, Lab TBD, dan Lab RPL',
-//     image: 'images/labimg.jpeg',
-//     link: '/internal/gedung-lab-internal'
-//   },
-//   {
-//     category: 'Fakultas Teknik',
-//     title: 'Gedung PTI',
-//     description: 'PTI-1, PTI-2, PTI-3',
-//     image: 'images/ptiimg.jpeg',
-//     link: '/internal/gedung-pti-internal'
-//   }
-// ];
-
 const HomeInternal: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [gedungList, setGedungList] = useState<GedungData[]>([]);
@@ -64,7 +25,6 @@ const HomeInternal: React.FC = () => {
 
     interface GedungApiResponse {
       nama_gedung: string;
-      // fasilitas_gedung: string;
       gambar_gedung: string;
       gedung_id: number;
       ruangan: RuanganSimple[]; 
@@ -216,7 +176,6 @@ const HomeInternal: React.FC = () => {
         </div>
       </div>
 
-      {/* Denah Lokasi */}
       <div className="custom-container mt-4 mb-4">
         <h2 className="text-center fw-bold mb-4">Denah Lokasi Gedung</h2>
         <div className="bg-white rounded-lg p-4 mb-5 shadow-lg">

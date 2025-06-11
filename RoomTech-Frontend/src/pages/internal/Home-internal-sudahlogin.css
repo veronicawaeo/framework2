@@ -13,10 +13,10 @@ body {
   text-align: left;
   color: white;
   z-index: 1;
-  width: calc(100% + 40px); /* Lebarkan sedikit dari container */
+  width: calc(100% + 40px); 
   margin: 20px -20px 0 -20px;
   border-radius: 20px;
-  overflow: visible; /* supaya container di atas tidak terpotong */
+  overflow: visible; 
   padding-bottom: 60px;
   height: 520px; 
 }
@@ -31,7 +31,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1; /* Biar gambar tetap di belakang */
+  z-index: -1; 
   border-radius: inherit;
 }
 
@@ -61,7 +61,7 @@ body {
   margin: 50px;
 }
 
-.btn-custom:hover { /* Warna button saat hover */
+.btn-custom:hover { 
   background-color: #4e1876; 
   color:#c3adcd;
   transition: background-color 0.3s ease;
@@ -70,7 +70,7 @@ body {
 .blur-container {
   background-color: rgba(255, 255, 255, 0.8); 
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* untuk Safari */
+  -webkit-backdrop-filter: blur(10px); 
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -116,8 +116,8 @@ body {
   width: 90%;
   max-width: 800px;
   margin: auto;
-  margin-top: -100px; /* Naik lebih ke dalam hero image */
-  margin-bottom: 40px; /* kasih ruang bawah juga */
+  margin-top: -100px;
+  margin-bottom: 40px;
   z-index: 5;
   position: relative;
 }
@@ -168,27 +168,26 @@ label {
 }
 
 .toggle-link {
-  color: #6F42C1; /* Bootstrap Primary */
+  color: #6F42C1;
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .toggle-link:hover {
-  color: #084298; /* Darker shade for hover */
+  color: #084298;
   text-decoration: underline;
 }
 
 .scroll-container {
   max-height: 140px;
   overflow-y: auto;
-  overflow-x: hidden; /* Hilangkan scrollbar horizontal */
+  overflow-x: hidden;
   padding-right: 8px;
   scrollbar-width: thin;
   scrollbar-color: #aaa #f0f0f0;
 }
 
-/* Chrome & Safari */
 .scroll-container::-webkit-scrollbar {
   width: 6px;
 }
@@ -208,8 +207,6 @@ label {
   transition: all 0.3s ease;
 }
 
-
-/* Responsive untuk ukuran layar kecil (smartphone) */
 @media (max-width: 480px) {
   .hero-section {
     height: 350px;
@@ -310,7 +307,6 @@ label {
   }
 }
 
-/* Responsive untuk layar sedang (tablet) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .hero-text h1 {
     font-size: 40px;

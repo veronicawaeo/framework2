@@ -1,4 +1,3 @@
-// src/data/dataRuanganDipakai.ts
 export interface RuanganDipakai {
     nama: string;
     tanggal: string;

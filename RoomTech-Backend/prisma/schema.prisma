@@ -93,11 +93,9 @@ model RuanganFasilitas {
   ruangan_id    Int
   fasilitas_id  Int
 
-  // Mendefinisikan relasi ke model ruangan dan Fasilitas
   ruangan       ruangan   @relation(fields: [ruangan_id], references: [ruang_id])
   fasilitas     Fasilitas @relation(fields: [fasilitas_id], references: [fasilitas_id])
 
-  // Membuat kombinasi ruangan_id dan fasilitas_id sebagai primary key
   @@id([ruangan_id, fasilitas_id])
   @@map("ruangan_fasilitas")
 }
@@ -133,16 +131,4 @@ model Peminjaman  {
   @@index([user_id])
   @@index([ruangan_id])
   @@index([gedung_id])
-
-  // status        StatusRuangan
-
-  // // Menambahkan foreign key untuk relasi
-  // ruangan_id Int
-  // user_id    Int?
-  // gedung_id  Int?
-
-  // // Mendefinisikan relasi dengan benar
-  // ruangan ruangan @relation(fields: [ruangan_id], references: [ruang_id])
-  // user    user?   @relation(fields: [user_id], references: [user_id])
-  // gedung  gedung? @relation(fields: [gedung_id], references: [gedung_id])
 }

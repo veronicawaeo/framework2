@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+import Home from './pages/Home';
 import RiwayatInternal from './pages/internal/RiwayatPeminjaman-internal';
 import ProfilInternal from './pages/internal/Profil-internal';
 import Navbar from './components/Navbar';
@@ -25,6 +27,7 @@ const AppContent = () => {
       {!hideLayout && <Navbar />}
 
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home-internal" element={<HomeInternal />} />

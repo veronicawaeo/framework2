@@ -37,7 +37,6 @@ const RegisterPage = () => {
         ...(userType === 'civitas' && { nim_nip: nimNip })
       };
   
-      // Simulasi registrasi sukses
       navigate('/home-internal');
   
     } catch (error: any) {
@@ -50,7 +49,6 @@ const RegisterPage = () => {
   return (
     <div className="container min-vh-100 w-100 g-0 mx-0">
       <div className="row vw-100 vh-100 g-0">
-        {/* Left Section */}
         <div className="col d-flex flex-column position-relative text-white bg-purple px-5 py-4">
           <Link to="/" className="position-absolute top-0 start-0 m-4">
             <img src="/images/roomtech-fix.png" alt="Logo RoomTech" style={{ width: '80px' }} />
@@ -64,7 +62,6 @@ const RegisterPage = () => {
           </div>
         </div>
 
-        {/* Right Section */}
         <div className="col d-flex flex-column bg-light justify-content-center px-5 py-4">
           <h2 className="fw-bold mb-3">Register</h2>
 

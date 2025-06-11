@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import './GedungPage-internal.css';
 
-// --- Mendefinisikan Tipe Data untuk Kejelasan Kode ---
 interface Fasilitas {
   fasilitas_id: number;
   nama_fasilitas: string;
@@ -35,13 +34,11 @@ const GedungPageInternal: React.FC = () => {
   const { gedungId } = useParams<{ gedungId: string }>();
   const navigate = useNavigate();
 
-  // --- State untuk Data ---
   const [gedung, setGedung] = useState<Gedung | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [userType, setUserType] = useState<'INTERNAL' | 'UMUM' | null>(null);
 
-  // --- State untuk Interaksi Pengguna ---
   const [tanggal, setTanggal] = useState<string>('');
   const [jamMulai, setJamMulai] = useState<string>('09:00');
   const [jamSelesai, setJamSelesai] = useState<string>('17:00');
@@ -49,9 +46,7 @@ const GedungPageInternal: React.FC = () => {
   const [fasilitasDipilih, setFasilitasDipilih] = useState<Set<number>>(new Set());
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // --- Efek untuk Mengambil Data Awal ---
   useEffect(() => {
-    // Ambil dan set tipe pengguna dari localStorage
     const userData = localStorage.getItem('user');
     setUserType(userData ? JSON.parse(userData).user_type || 'UMUM' : 'UMUM');
 
@@ -77,7 +72,6 @@ const GedungPageInternal: React.FC = () => {
 
         const data = await response.json();
         
-        // Petakan data API ke tipe data yang lebih bersih
         const mappedGedung: Gedung = {
           ...data,
           ruangan: data.ruangan.map((room: any) => ({
@@ -98,10 +92,9 @@ const GedungPageInternal: React.FC = () => {
     fetchGedungDetail();
   }, [gedungId]);
 
-  // --- Fungsi-fungsi Handler ---
   const handlePilihRuangan = (room: Ruangan) => {
     setRuanganDipilih(room);
-    setFasilitasDipilih(new Set()); // Reset pilihan fasilitas saat ganti ruangan
+    setFasilitasDipilih(new Set());
     setValidationError(null);
   };
 
@@ -136,7 +129,7 @@ const GedungPageInternal: React.FC = () => {
     if (userType === 'UMUM') {
       fasilitasFinal = ruanganDipilih.fasilitasTambahan.filter(f => fasilitasDipilih.has(f.fasilitas_id));
     } else {
-      fasilitasFinal = ruanganDipilih.fasilitasTambahan; // Semua fasilitas untuk INTERNAL
+      fasilitasFinal = ruanganDipilih.fasilitasTambahan; 
     }
 
     navigate('/konfirmasi-internal', {
@@ -153,7 +146,6 @@ const GedungPageInternal: React.FC = () => {
     });
   };
 
-  // --- Render Kondisional ---
   if (loading || !userType) {
     return <div className="text-center mt-5"><h3>Memuat data gedung...</h3></div>;
   }
@@ -178,14 +170,11 @@ const GedungPageInternal: React.FC = () => {
     );
   }
 
-  // --- Render Utama ---
   return (
     <div className="container mt-5">
       <Link to="/home-internal" className="btn btn-outline-dark mb-4">← Kembali</Link>
-      
-      {/* Header Gedung */}
+    
       <div className="position-relative mb-4 rounded overflow-hidden" style={{ maxHeight: '400px' }}>
-        {/* --- PERBAIKAN URL GAMBAR --- */}
         <img src={gedung.gambar_gedung ? `/${gedung.gambar_gedung}` : '/images/default-gedung.png'} alt={gedung.nama_gedung} className="img-fluid w-100" style={{ height: '400px', objectFit: 'cover', filter: 'brightness(0.5)' }} />
         <div className="position-absolute top-50 start-50 translate-middle text-white text-center px-3">
           <h2 className="fw-bold">{gedung.nama_gedung}</h2>
@@ -197,7 +186,6 @@ const GedungPageInternal: React.FC = () => {
         </div>
       </div>
 
-      {/* Form Pilihan Tanggal & Waktu */}
       <h4 className="mt-5 mb-3 fw-semibold">Pilih Tanggal dan Waktu</h4>
       <div className="rounded-4 bg-white shadow-sm p-3 my-4">
         <div className="d-flex flex-column flex-md-row border rounded-4 overflow-hidden">
@@ -218,7 +206,6 @@ const GedungPageInternal: React.FC = () => {
         </div>
       </div>
 
-      {/* Fasilitas Umum Gedung */}
       <h4 className="mt-5 mb-3 fw-semibold">Fasilitas Gedung</h4>
       <div className="row">
         {gedung.fasilitas_gedung.split(',').map((f, i) => (
@@ -228,13 +215,11 @@ const GedungPageInternal: React.FC = () => {
         ))}
       </div>
 
-      {/* Daftar Ruangan */}
       <h4 className="mt-5 mb-3 fw-semibold">Pilih Ruangan</h4>
       <div className="row">
         {gedung.ruangan.map((room) => (
           <div key={room.ruang_id} className="col-md-6 mb-4">
             <div className="card shadow-sm h-100">
-              {/* --- PERBAIKAN URL GAMBAR --- */}
               <img src={room.gambar_ruangan ? `/${room.gambar_ruangan}` : '/images/default-room.png'} alt={room.nama_ruangan} className="card-img-top" style={{ height: '200px', objectFit: 'cover' }} />
               <div className="card-body d-flex flex-column">
                 <div className="form-check mb-2">
@@ -282,7 +267,6 @@ const GedungPageInternal: React.FC = () => {
         ))}
       </div>
       
-      {/* Tombol Konfirmasi */}
       <div className="text-center my-4">
         <Button onClick={handleKonfirmasi} className="btn-konfirmasi px-5 py-2">
           Konfirmasi Ruangan

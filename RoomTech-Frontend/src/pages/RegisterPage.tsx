@@ -10,7 +10,7 @@ const RegisterPage = () => {
  const [email, setEmail] = useState('');
  const [password, setPassword] = useState('');
  const [nimNip, setNimNip] = useState('');
-  const [error, setError] = useState<string | null>(null); // State untuk pesan error
+  const [error, setError] = useState<string | null>(null); 
  const navigate = useNavigate();
 
  useEffect(() => {
@@ -22,7 +22,6 @@ const RegisterPage = () => {
 
  const handleUserTypeChange = (type: 'INTERNAL' | 'UMUM') => {
   setUserType(type);
-    // Reset input fields saat tab diganti
   setEmail('');
   setPassword('');
   setNimNip('');
@@ -31,20 +30,17 @@ const RegisterPage = () => {
 
  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-    setError(null); // Reset error setiap kali submit
+    setError(null); 
 
-    // Validasi email untuk user INTERNAL
     if (userType === 'INTERNAL' && !email.endsWith('@student.unsrat.ac.id') && !email.endsWith('@unsrat.ac.id')) {
         setError('Pendaftaran INTERNAL harus menggunakan email dengan domain @student.unsrat.ac.id atau @unsrat.ac.id.');
         return;
     }
- 
-    // Siapkan payload untuk dikirim ke API
+
   const payload: any = {
    nama,
    email,
    password,
-      // Kirim nim atau nip tergantung pilihan user. Backend akan menanganinya.
    ...(userType === 'INTERNAL' && { 
      nim: nimNip, 
      nip: nimNip 
@@ -63,7 +59,6 @@ const RegisterPage = () => {
    const data = await response.json();
  
    if (!response.ok) {
-        // Tampilkan pesan error dari backend
     throw new Error(data.message || 'Registrasi gagal. Silakan coba lagi.');
    }
  
@@ -72,7 +67,6 @@ const RegisterPage = () => {
 
   } catch (error: any) {
    console.error('Gagal registrasi:', error);
-      // Set pesan error untuk ditampilkan di UI
    setError(error.message);
   }
  };
@@ -80,7 +74,6 @@ const RegisterPage = () => {
  return (
   <div className="container min-vh-100 w-100 g-0 mx-0">
    <div className="row vw-100 vh-100 g-0">
-    {/* Left Section */}
     <div className="col d-flex flex-column position-relative text-white bg-purple px-5 py-4">
      <Link to="/" className="position-absolute top-0 start-0 m-4">
       <img src="/images/roomtech-fix.png" alt="Logo RoomTech" style={{ width: '80px' }} />
@@ -94,7 +87,6 @@ const RegisterPage = () => {
      </div>
     </div>
 
-    {/* Right Section */}
     <div className="col d-flex flex-column bg-light justify-content-center px-5 py-4">
      <h2 className="fw-bold mb-3">Register</h2>
 
@@ -178,9 +170,8 @@ const RegisterPage = () => {
         required
        />
       </div>
-
-            {/* Tampilkan pesan error jika ada */}
-            {error && <p className="text-danger small">{error}</p>}
+      
+      {error && <p className="text-danger small">{error}</p>}
 
       <button type="submit" className="btn btn-purple w-100 mt-2">Daftar</button>
 

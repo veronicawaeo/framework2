@@ -24,33 +24,4 @@ export class AdminController {
     }
     return this.adminService.updatePeminjamanStatus(id, status);
   }
-
-  // @Get('ruangan')
-  // async getAllRooms() {
-  //   return this.adminService.findAllRooms();
-  // }
-
-  // @Post('ruangan')
-  // @UseInterceptors(FileInterceptor('gambar_ruangan'))
-  // async createRoom(
-  //   @Body() dto: RoomDto,
-  //   @UploadedFile() file?: Express.Multer.File,
-  // ) {
-  //   return this.adminService.createRoom(dto, file);
-  // }
-
-  // @Patch('ruangan/:id')
-  // @UseInterceptors(FileInterceptor('gambar_ruangan'))
-  // async updateRoom(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() dto: RoomDto,
-  //   @UploadedFile() file?: Express.Multer.File,
-  // ) {
-  //   return this.adminService.updateRoom(id, dto, file);
-  // }
-  
-  // @Delete('ruangan/:id')
-  // async deleteRoom(@Param('id', ParseIntPipe) id: number) {
-  //   return this.adminService.deleteRoom(id);
-  // }
 }
