@@ -24,8 +24,10 @@ const LoginPage = () => {
     setLoading(true)
     console.log("--- DEBUG: Memulai proses login ---");
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
