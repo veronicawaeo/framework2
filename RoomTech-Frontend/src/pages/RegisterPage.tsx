@@ -49,6 +49,12 @@ const RegisterPage = () => {
  
   const apiUrl = process.env.REACT_APP_API_URL;
   
+  if (!apiUrl) {
+    setError("Konfigurasi API URL tidak ditemukan. Silakan hubungi administrator.");
+    console.error("Error: REACT_APP_API_URL tidak ditemukan.");
+    return;
+  }
+  
   try {
    const response = await fetch(`${apiUrl}/auth/register`, {
     method: 'POST',
