@@ -34,7 +34,7 @@ const HomeInternal: React.FC = () => {
       try {
         console.log('Frontend: Memulai fetchGedung...'); 
         
-        const response = await fetch('http://127.0.0.1:3001/gedung', { 
+        const response = await fetch('${process.env.REACT_APP_API_URL}/gedung', { 
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -77,7 +77,7 @@ const HomeInternal: React.FC = () => {
 
     const fetchRuanganDipakai = async () => {
       try {
-          const response = await fetch('http://127.0.0.1:3001/gedung/ruangan-dipakai', {
+          const response = await fetch('${process.env.REACT_APP_API_URL}/gedung/ruangan-dipakai', {
               headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
           });
           if (!response.ok) throw new Error('Gagal mengambil data ruangan dipakai');

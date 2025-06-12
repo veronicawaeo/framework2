@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true)
     try {
-      const response = await fetch("http://127.0.0.1:3000/auth/login", {
+      const response = await fetch("${process.env.REACT_APP_API_URL}/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (userData: any) => {
     setLoading(true)
     try {
-      const response = await fetch("http://127.0.0.1:3000/auth/register", {
+      const response = await fetch("${process.env.REACT_APP_API_URL}/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

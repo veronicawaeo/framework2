@@ -61,7 +61,7 @@ const GedungPageInternal: React.FC = () => {
       setError(null);
 
       try {
-        const response = await fetch(`http://127.0.0.1:3001/gedung/${gedungId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/gedung/${gedungId}`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
 
