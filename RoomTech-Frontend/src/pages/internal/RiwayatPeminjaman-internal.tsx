@@ -69,7 +69,7 @@ const RiwayatInternal = () => {
 
   const fetchRiwayat = async () => {
     try {
-      const response = await fetch('${process.env.REACT_APP_API_URL}/peminjaman/riwayat', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/peminjaman/riwayat`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

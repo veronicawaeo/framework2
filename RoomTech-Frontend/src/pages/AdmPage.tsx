@@ -40,7 +40,7 @@ const AdmPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('${process.env.REACT_APP_API_URL}/admin/peminjaman', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/peminjaman`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         if (!response.ok) {
