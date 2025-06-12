@@ -58,7 +58,6 @@ const AdmPage: React.FC = () => {
     fetchPeminjaman();
   }, []);
   
-  // --- Fungsi untuk memfilter data berdasarkan tab ---
   const handleFilter = (status: string) => {
     setActiveTab(status);
     if (status === 'All') {
@@ -79,7 +78,6 @@ const AdmPage: React.FC = () => {
     setSelectedPeminjaman(null);
   };
 
-  // --- Fungsi untuk update status ke backend ---
   const updateStatus = async (newStatus: 'DISETUJUI' | 'DITOLAK') => {
     if (!selectedPeminjaman) return;
 
@@ -97,14 +95,12 @@ const AdmPage: React.FC = () => {
         throw new Error('Gagal memperbarui status.');
       }
       
-      // Update status di state lokal agar UI langsung berubah
       const updatedList = peminjamanList.map(p =>
         p.peminjaman_id === selectedPeminjaman.peminjaman_id
           ? { ...p, status_peminjaman: newStatus }
           : p
       );
       setPeminjamanList(updatedList);
-      // Terapkan filter lagi untuk memperbarui tampilan saat ini
       handleFilter(activeTab); 
 
       closeModal();
@@ -113,7 +109,6 @@ const AdmPage: React.FC = () => {
     }
   };
   
-  // --- Kalkulasi untuk kartu ringkasan ---
   const totalCount = peminjamanList.length;
   const approvedCount = peminjamanList.filter(p => p.status_peminjaman === 'DISETUJUI').length;
   const pendingCount = peminjamanList.filter(p => p.status_peminjaman === 'PENGAJUAN').length;
@@ -159,7 +154,6 @@ const AdmPage: React.FC = () => {
             <button onClick={() => handleFilter('MENUNGGU_PEMBAYARAN')} className={`tab ${activeTab === 'MENUNGGU_PEMBAYARAN' ? 'active' : ''}`}>Waiting Payment</button>
             <button onClick={() => handleFilter('DITOLAK')} className={`tab ${activeTab === 'DITOLAK' ? 'active' : ''}`}>Rejected</button>
           </div>
-          {/* <input type="text" className="form-control search" placeholder="Search..." /> */}
         </div>
 
         <div className="table-responsive">
@@ -192,7 +186,6 @@ const AdmPage: React.FC = () => {
                   </td>
                   <td>
                     <i className="bi bi-pencil-square me-2" onClick={() => openModal(p)}></i>
-                    {/* <i className="bi bi-eye-fill" onClick={() => openModal(p)}></i> */}
                   </td>
                 </tr>
               ))}

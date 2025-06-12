@@ -47,8 +47,10 @@ const RegisterPage = () => {
    })
   };
  
+  const apiUrl = process.env.REACT_APP_API_URL;
+  
   try {
-   const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
+   const response = await fetch(`${apiUrl}/auth/register`, {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json',
