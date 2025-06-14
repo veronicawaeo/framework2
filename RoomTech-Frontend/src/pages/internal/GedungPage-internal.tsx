@@ -46,6 +46,8 @@ const GedungPageInternal: React.FC = () => {
   const [fasilitasDipilih, setFasilitasDipilih] = useState<Set<number>>(new Set());
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const userData = localStorage.getItem('user');
     setUserType(userData ? JSON.parse(userData).user_type || 'UMUM' : 'UMUM');
@@ -61,7 +63,7 @@ const GedungPageInternal: React.FC = () => {
       setError(null);
 
       try {
-        const response = await fetch(`http://127.0.0.1:3001/gedung/${gedungId}`, {
+        const response = await fetch(`${apiUrl}/gedung/${gedungId}`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
 
@@ -90,7 +92,7 @@ const GedungPageInternal: React.FC = () => {
     };
 
     fetchGedungDetail();
-  }, [gedungId]);
+  }, [gedungId, apiUrl]);
 
   const handlePilihRuangan = (room: Ruangan) => {
     setRuanganDipilih(room);

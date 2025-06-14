@@ -44,6 +44,8 @@ const KonfirmasiPageInternal: React.FC = () => {
 
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+ const apiUrl = process.env.REACT_APP_API_URL;
+
  useEffect(() => {
   const storedUser = localStorage.getItem("user");
   if (storedUser) {
@@ -109,7 +111,7 @@ const KonfirmasiPageInternal: React.FC = () => {
   dataToSend.append('totalHarga', String(totalHargaFinal));
 
   try {
-   const response = await fetch('http://127.0.0.1:3001/peminjaman', {
+   const response = await fetch(`${apiUrl}/peminjaman`, {
     method: 'POST',
     headers: {
      'Authorization': `Bearer ${token}`,

@@ -57,6 +57,8 @@ const RiwayatInternal = () => {
  const [currentUserName, setCurrentUserName] = useState<string>('Anda');
  const [userType, setUserType] = useState<'INTERNAL' | 'UMUM' | null>(null);
 
+ const apiUrl = process.env.REACT_APP_API_URL;
+
  useEffect(() => {
   const storedUser = localStorage.getItem("user");
   if (storedUser) {
@@ -69,7 +71,7 @@ const RiwayatInternal = () => {
 
   const fetchRiwayat = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:3001/peminjaman/riwayat', {
+      const response = await fetch(`${apiUrl}/peminjaman/riwayat`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -116,7 +118,7 @@ const RiwayatInternal = () => {
     };
 
   fetchRiwayat();
-}, [currentUserName]);
+}, [currentUserName, apiUrl]);
 
  const handleStatusClick = (index: number) => {
   setExpandedRow(expandedRow === index ? null : index);
@@ -175,7 +177,7 @@ const RiwayatInternal = () => {
              <p>
               <strong>Surat Izin:</strong>{' '}
               <a 
-               href={`http://127.0.0.1:3001/${item.suratIzinPath}`} 
+              href={`${apiUrl}/${item.suratIzinPath}`} 
                target="_blank" 
                rel="noopener noreferrer"
                className="text-decoration-underline"

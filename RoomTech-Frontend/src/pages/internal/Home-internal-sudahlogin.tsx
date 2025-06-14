@@ -17,6 +17,8 @@ const HomeInternal: React.FC = () => {
   const [gedungList, setGedungList] = useState<GedungData[]>([]);
   const [ruangDipakaiListState, setRuangDipakaiListState] = useState<any[]>([]);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
 
     interface RuanganSimple {
@@ -34,7 +36,7 @@ const HomeInternal: React.FC = () => {
       try {
         console.log('Frontend: Memulai fetchGedung...'); 
         
-        const response = await fetch('http://127.0.0.1:3001/gedung', { 
+        const response = await fetch(`${apiUrl}/gedung`, { 
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -77,7 +79,7 @@ const HomeInternal: React.FC = () => {
 
     const fetchRuanganDipakai = async () => {
       try {
-          const response = await fetch('http://127.0.0.1:3001/gedung/ruangan-dipakai', {
+          const response = await fetch(`${apiUrl}/gedung/ruangan-dipakai`, {
               headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
           });
           if (!response.ok) throw new Error('Gagal mengambil data ruangan dipakai');
@@ -99,7 +101,7 @@ const HomeInternal: React.FC = () => {
     } else {
       setUser(null); 
     }
-  }, []);
+  }, [apiUrl]);
 
   return (
     <div className="container mt-4">
