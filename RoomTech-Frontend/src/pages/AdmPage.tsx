@@ -84,7 +84,7 @@ const AdmPage: React.FC = () => {
     if (!selectedPeminjaman) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:3001/admin/peminjaman/${selectedPeminjaman.peminjaman_id}/status`, {
+      const response = await fetch(`${apiUrl}/admin/peminjaman/${selectedPeminjaman.peminjaman_id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
