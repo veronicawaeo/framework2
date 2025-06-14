@@ -29,6 +29,8 @@ const AdmPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('All');
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
@@ -40,7 +42,7 @@ const AdmPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://127.0.0.1:3001/admin/peminjaman', {
+        const response = await fetch(`${apiUrl}/admin/peminjaman`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         if (!response.ok) {
@@ -56,7 +58,7 @@ const AdmPage: React.FC = () => {
       }
     };
     fetchPeminjaman();
-  }, []);
+  }, [apiUrl]);
   
   const handleFilter = (status: string) => {
     setActiveTab(status);

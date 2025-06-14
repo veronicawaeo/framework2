@@ -48,7 +48,8 @@ const RegisterPage = () => {
   };
   
   try {
-   const response = await fetch('https://roomtech-backend-production-96e5.up.railway.app/auth/register', {
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const response = await fetch(`${apiUrl}/auth/register`, {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json',
