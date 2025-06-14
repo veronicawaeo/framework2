@@ -26,16 +26,12 @@ const ProfilInternal: React.FC = () => {
     <div className="profil-wrapper">
       <div className="profil-card">
         <div className="profil-header">
-          <div className="profil-avatar-wrapper">
-            <img src={fotoURL} alt="User" className="profil-avatar" />
-          </div>
           <div className="profil-text">
             <div className="profil-nama">{user ? user.nama : 'Loading...'}</div>
             <div className="profil-email">{user ? user.email : 'Loading...'}</div>
           </div>
         </div>
 
-        {/* Tombol Logout */}
         <div className="profil-actions mt-4 text-center">
           <button className="custom-logout-btn" onClick={handleLogout}>
             Logout
