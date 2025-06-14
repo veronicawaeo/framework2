@@ -24,10 +24,8 @@ const LoginPage = () => {
     setLoading(true)
     console.log("--- DEBUG: Memulai proses login ---");
 
-    const apiUrl = process.env.REACT_APP_API_URL;
-
     try {
-      const response = await fetch(`${apiUrl}/auth/login`, {
+      const response = await fetch('https://roomtech-backend-production-96e5.up.railway.app/auth/login', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

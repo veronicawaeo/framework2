@@ -6,7 +6,7 @@ import {
   faYoutube,
   faTwitter
 } from '@fortawesome/free-brands-svg-icons';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+// import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {

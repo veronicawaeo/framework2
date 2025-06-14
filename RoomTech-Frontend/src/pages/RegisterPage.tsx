@@ -46,17 +46,9 @@ const RegisterPage = () => {
      nip: nimNip 
    })
   };
- 
-  const apiUrl = process.env.REACT_APP_API_URL;
-  
-  if (!apiUrl) {
-    setError("Konfigurasi API URL tidak ditemukan. Silakan hubungi administrator.");
-    console.error("Error: REACT_APP_API_URL tidak ditemukan.");
-    return;
-  }
   
   try {
-   const response = await fetch(`${apiUrl}/auth/register`, {
+   const response = await fetch('https://roomtech-backend-production-96e5.up.railway.app/auth/register', {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json',
