@@ -63,7 +63,7 @@ const GedungPageInternal: React.FC = () => {
       setError(null);
 
       try {
-        const response = await fetch(`${apiUrl}/gedung/${gedungId}`, {
+        const response = await fetch(`${apiUrl}/api/gedung/${gedungId}`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
 
