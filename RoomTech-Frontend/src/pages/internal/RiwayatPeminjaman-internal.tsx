@@ -71,7 +71,7 @@ const RiwayatInternal = () => {
 
   const fetchRiwayat = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/peminjaman/riwayat`, {
+      const response = await fetch(`${apiUrl}/peminjaman/riwayat`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

@@ -42,7 +42,7 @@ const AdmPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${apiUrl}/api/admin/peminjaman`, {
+        const response = await fetch(`${apiUrl}/admin/peminjaman`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         if (!response.ok) {
@@ -84,7 +84,7 @@ const AdmPage: React.FC = () => {
     if (!selectedPeminjaman) return;
 
     try {
-      const response = await fetch(`${apiUrl}/api/admin/peminjaman/${selectedPeminjaman.peminjaman_id}/status`, {
+      const response = await fetch(`${apiUrl}/admin/peminjaman/${selectedPeminjaman.peminjaman_id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

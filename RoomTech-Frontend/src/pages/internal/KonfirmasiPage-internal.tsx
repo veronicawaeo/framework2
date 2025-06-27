@@ -111,7 +111,7 @@ const KonfirmasiPageInternal: React.FC = () => {
   dataToSend.append('totalHarga', String(totalHargaFinal));
 
   try {
-   const response = await fetch(`${apiUrl}/api/peminjaman`, {
+   const response = await fetch(`${apiUrl}/peminjaman`, {
     method: 'POST',
     headers: {
      'Authorization': `Bearer ${token}`,
